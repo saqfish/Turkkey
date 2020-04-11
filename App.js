@@ -14,47 +14,17 @@ import {
 
 const Drawer = createDrawerNavigator();
 
+import ScrapeScreen from './components/ScrapeOptions/ScrapeOptions.js';
+import HistoryScreen from './components/History/History.js';
+import QueueScreen from './components/Queue/Queue.js';
+import BlockListScreen from './components/Lists/Lists.js';
+import IncludeListScreen from './components/Lists/Lists.js';
+
 export default function App() {
   const ref = useRef(null);
 
   const [dark, setDark] = useState(true);
   const theme = dark ? DarkTheme : DefaultTheme;
-
-  function QueueScreen({navigation}) {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> Queue </Text>
-      </View>
-    );
-  }
-  function ScrapeScreen({navigation}) {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> Scrape </Text>
-      </View>
-    );
-  }
-  function HistoryScreen({navigation}) {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> History </Text>
-      </View>
-    );
-  }
-  function BlockListScreen({navigation}) {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> BlockList </Text>
-      </View>
-    );
-  }
-  function IncludeListScreen({navigation}) {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> IncludeList </Text>
-      </View>
-    );
-  }
 
   function SettingsScreen({navigation}) {
     return (
