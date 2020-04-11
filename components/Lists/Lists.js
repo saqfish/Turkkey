@@ -1,11 +1,11 @@
 import React from 'react';
-
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
+import ListTable from './ListTable';
 
 const Lists = () => {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text> Lists </Text>
+    <View>
+      <ListTable />
     </View>
   );
 };

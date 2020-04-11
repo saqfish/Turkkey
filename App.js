@@ -23,13 +23,46 @@ import IncludeListScreen from './components/Lists/Lists.js';
 export default function App() {
   const ref = useRef(null);
 
+  const fonts = {
+    regular: {
+      fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+      fontWeight: '300',
+    },
+    medium: {
+      fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+      fontWeight: '300',
+    },
+    light: {
+      fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+      fontWeight: '300',
+    },
+    thin: {
+      fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+      fontWeight: '300',
+    },
+  };
+
+  const customDark = {
+    ...DarkTheme,
+    colors: {...DarkTheme.colors, primary: '#424242'},
+    fonts,
+  };
+  const customLight = {
+    ...DefaultTheme,
+    colors: {...DefaultTheme.colors, primary: '#fff'},
+    fonts,
+  };
+
   const [dark, setDark] = useState(true);
-  const theme = dark ? DarkTheme : DefaultTheme;
+  const theme = dark ? customDark : customLight;
+  const navigationTheme = dark
+    ? customDark
+    : {...customLight, colors: {...customLight.colors, primary: '#000000'}};
 
   function SettingsScreen({navigation}) {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> IncludeList </Text>
+        <Text> Settings </Text>
       </View>
     );
   }
@@ -52,7 +85,7 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <AppBar navigation={ref} />
-      <NavigationContainer ref={ref} theme={theme}>
+      <NavigationContainer ref={ref} theme={navigationTheme}>
         <Drawer.Navigator initialRouteName="Queue">
           <Drawer.Screen name="Scrape" component={ScrapeScreen} />
           <Drawer.Screen name="Queue" component={QueueScreen} />

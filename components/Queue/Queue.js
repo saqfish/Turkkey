@@ -1,11 +1,11 @@
 import React from 'react';
-
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
+import QueueTable from './QueueTable';
 
 const Queue = () => {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text> Queue </Text>
+    <View>
+      <QueueTable />
     </View>
   );
 };
