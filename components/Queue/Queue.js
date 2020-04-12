@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, {useCallback, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {View} from 'react-native';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 
 import QueueTable from './QueueTable';
 
-const Queue = props => {
+const Queue = () => {
   console.log('Queue');
-  const {navigation} = props;
   const [queueData, setQueueData] = useState();
   const getQueueData = () => {
+    console.log('fetching...');
     let url = 'https://worker.mturk.com/tasks.json';
     fetch(`${url}`, {
       method: 'GET',
@@ -22,21 +23,17 @@ const Queue = props => {
       .then(res => res.json())
       .then(res => {
         setQueueData(res.tasks);
+        console.log(res);
       })
       .catch(err => {
         console.log(err);
       });
   };
-  useEffect(() => {
-    navigation.addListener('focus', () => {
-      console.log('fetching...');
+  useFocusEffect(
+    useCallback(() => {
       getQueueData();
-    });
-  }, [navigation]);
-
-  useEffect(() => {
-    console.log(queueData);
-  }, [queueData]);
+    }, []),
+  );
 
   return (
     <View>
