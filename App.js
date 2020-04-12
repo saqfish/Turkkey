@@ -1,10 +1,8 @@
 import 'react-native-get-random-values';
-import React, {createContext, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 
 import {Appbar} from 'react-native-paper';
 import {Provider as PaperProvider} from 'react-native-paper';
-
-import {View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   NavigationContainer,
@@ -15,12 +13,15 @@ import {
 
 const Drawer = createDrawerNavigator();
 
+import {loginContext} from './components/Context';
+
+import WebView from './components/WebView/WebView.js';
 import ScrapeScreen from './components/ScrapeOptions/ScrapeOptions.js';
 import HistoryScreen from './components/History/History.js';
 import QueueScreen from './components/Queue/Queue.js';
 import BlockListScreen from './components/Lists/Lists.js';
 import IncludeListScreen from './components/Lists/Lists.js';
-import ReactWebView from 'react-native-webview';
+import SettingsScreen from './components/Settings/Settings.js';
 
 export default function App() {
   const [login, setLogin] = useState(false);
@@ -68,20 +69,6 @@ export default function App() {
     ? customDark
     : {...customLight, colors: {...customLight.colors, primary: '#000000'}};
 
-  function SettingsScreen({navigation}) {
-    return (
-      <View style={{flex: 1}}>
-        <ReactWebView
-          source={{uri: 'https://worker.mturk.com/'}}
-          onNavigationStateChange={state => {
-            console.log(state.url);
-            setLogin(!state.url.includes('https://www.amazon.com/ap/signin'));
-          }}
-          onError={() => console.warn('error')}
-        />
-      </View>
-    );
-  }
   function AppBar({navigation}) {
     return (
       <Appbar>
@@ -100,20 +87,22 @@ export default function App() {
   }
   return (
     <PaperProvider theme={theme}>
-      <AppBar navigation={ref} />
-      <NavigationContainer ref={ref} theme={navigationTheme}>
-        <Drawer.Navigator initialRouteName="Queue">
-          <Drawer.Screen name="Scrape" component={ScrapeScreen} />
-          <Drawer.Screen
-            name="Queue"
-            component={login ? QueueScreen : SettingsScreen}
-          />
-          <Drawer.Screen name="History" component={HistoryScreen} />
-          <Drawer.Screen name="Block List" component={BlockListScreen} />
-          <Drawer.Screen name="Include List" component={IncludeListScreen} />
-          <Drawer.Screen name="Settings" component={SettingsScreen} />
-        </Drawer.Navigator>
-      </NavigationContainer>
+      <loginContext.Provider value={{login, setLogin}}>
+        <AppBar navigation={ref} />
+        <NavigationContainer ref={ref} theme={navigationTheme}>
+          <Drawer.Navigator initialRouteName="Queue">
+            <Drawer.Screen name="Scrape" component={ScrapeScreen} />
+            <Drawer.Screen
+              name="Queue"
+              component={login ? QueueScreen : WebView}
+            />
+            <Drawer.Screen name="History" component={HistoryScreen} />
+            <Drawer.Screen name="Block List" component={BlockListScreen} />
+            <Drawer.Screen name="Include List" component={IncludeListScreen} />
+            <Drawer.Screen name="Settings" component={SettingsScreen} />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </loginContext.Provider>
     </PaperProvider>
   );
 }
