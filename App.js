@@ -1,9 +1,10 @@
-import React, {useState, useRef} from 'react';
+import 'react-native-get-random-values';
+import React, {createContext, useState, useRef} from 'react';
 
 import {Appbar} from 'react-native-paper';
 import {Provider as PaperProvider} from 'react-native-paper';
 
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   NavigationContainer,
@@ -19,8 +20,10 @@ import HistoryScreen from './components/History/History.js';
 import QueueScreen from './components/Queue/Queue.js';
 import BlockListScreen from './components/Lists/Lists.js';
 import IncludeListScreen from './components/Lists/Lists.js';
+import ReactWebView from 'react-native-webview';
 
 export default function App() {
+  const [login, setLogin] = useState(false);
   const ref = useRef(null);
 
   const fonts = {
@@ -46,11 +49,17 @@ export default function App() {
     ...DarkTheme,
     colors: {...DarkTheme.colors, primary: '#424242'},
     fonts,
+    animation: {
+      scale: 1.0,
+    },
   };
   const customLight = {
     ...DefaultTheme,
     colors: {...DefaultTheme.colors, primary: '#fff'},
     fonts,
+    animation: {
+      scale: 1.0,
+    },
   };
 
   const [dark, setDark] = useState(true);
@@ -61,8 +70,15 @@ export default function App() {
 
   function SettingsScreen({navigation}) {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text> Settings </Text>
+      <View style={{flex: 1}}>
+        <ReactWebView
+          source={{uri: 'https://worker.mturk.com/'}}
+          onNavigationStateChange={state => {
+            console.log(state.url);
+            setLogin(!state.url.includes('https://www.amazon.com/ap/signin'));
+          }}
+          onError={() => console.warn('error')}
+        />
       </View>
     );
   }
@@ -88,7 +104,10 @@ export default function App() {
       <NavigationContainer ref={ref} theme={navigationTheme}>
         <Drawer.Navigator initialRouteName="Queue">
           <Drawer.Screen name="Scrape" component={ScrapeScreen} />
-          <Drawer.Screen name="Queue" component={QueueScreen} />
+          <Drawer.Screen
+            name="Queue"
+            component={login ? QueueScreen : SettingsScreen}
+          />
           <Drawer.Screen name="History" component={HistoryScreen} />
           <Drawer.Screen name="Block List" component={BlockListScreen} />
           <Drawer.Screen name="Include List" component={IncludeListScreen} />
