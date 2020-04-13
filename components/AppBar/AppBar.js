@@ -1,19 +1,22 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Appbar} from 'react-native-paper';
 
 import {DrawerActions} from '@react-navigation/native';
+
+import {scrapeContext} from '../Context';
 
 let interval;
 
 const AppBar = props => {
   const {navigation, darkness} = props;
   const {dark, setDark} = darkness;
+  const {setScrape} = useContext(scrapeContext);
 
   const [scraping, setScraping] = useState(false);
   const runScrape = () => {
     const qual = true;
     const masters = false;
-    let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${1}`;
+    let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${0.01}`;
     if (!scraping) {
       interval = setInterval(() => {
         setScraping(true);
@@ -26,7 +29,7 @@ const AppBar = props => {
           },
         })
           .then(res => res.json())
-          .then(res => console.log(res))
+          .then(res => setScrape(res))
           .catch(() => {
             stopScrape();
           });

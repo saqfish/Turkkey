@@ -1,12 +1,12 @@
 import React from 'react';
 import {DataTable} from 'react-native-paper';
 
-const QueueTable = props => {
+const ScrapeTable = props => {
   const bank = props.data;
+  console.log(`Hits: ${bank.length}`);
   return (
     <DataTable>
-      {bank.map(task => {
-        const hit = task.project;
+      {bank.map(hit => {
         return (
           <DataTable.Row>
             <DataTable.Cell>{hit.requester_name}</DataTable.Cell>
@@ -14,16 +14,8 @@ const QueueTable = props => {
           </DataTable.Row>
         );
       })}
-      <DataTable.Pagination
-        page={1}
-        numberOfPages={3}
-        onPageChange={page => {
-          console.log(page);
-        }}
-        label={`${bank.length} hits`}
-      />
     </DataTable>
   );
 };
 
-export default QueueTable;
+export default ScrapeTable;

@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 
 import {Provider as PaperProvider} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -12,13 +12,10 @@ import {
 const Drawer = createDrawerNavigator();
 
 import {loginContext} from './components/Context';
+import {scrapeContext} from './components/Context';
 
 import WebView from './components/WebView/WebView.js';
 import ScrapeScreen from './components/ScrapeOptions/ScrapeOptions.js';
-import HistoryScreen from './components/History/History.js';
-import QueueScreen from './components/Queue/Queue.js';
-import BlockListScreen from './components/Lists/Lists.js';
-import IncludeListScreen from './components/Lists/Lists.js';
 import SettingsScreen from './components/Settings/Settings.js';
 
 import AppBar from './components/AppBar/AppBar.js';
@@ -64,6 +61,7 @@ export default function App() {
   };
 
   const [dark, setDark] = useState(true);
+  const [scrape, setScrape] = useState({});
   const theme = dark ? customDark : customLight;
   const navigationTheme = dark
     ? customDark
@@ -72,21 +70,16 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <loginContext.Provider value={{login, setLogin}}>
-        <AppBar darkness={{dark, setDark}} navigation={ref} />
-        <NavigationContainer ref={ref} theme={navigationTheme}>
-          <Drawer.Navigator initialRouteName="Scrape">
-            <Drawer.Screen name="Scrape" component={ScrapeScreen} />
-            <Drawer.Screen
-              name="Queue"
-              component={login ? QueueScreen : WebView}
-            />
-            <Drawer.Screen name="History" component={HistoryScreen} />
-            <Drawer.Screen name="Block List" component={BlockListScreen} />
-            <Drawer.Screen name="Include List" component={IncludeListScreen} />
-            <Drawer.Screen name="Settings" component={SettingsScreen} />
-            <Drawer.Screen name="WebView" component={WebView} />
-          </Drawer.Navigator>
-        </NavigationContainer>
+        <scrapeContext.Provider value={{scrape, setScrape}}>
+          <AppBar darkness={{dark, setDark}} navigation={ref} />
+          <NavigationContainer ref={ref} theme={navigationTheme}>
+            <Drawer.Navigator initialRouteName="Scrape">
+              <Drawer.Screen name="Scrape" component={ScrapeScreen} />
+              <Drawer.Screen name="Settings" component={SettingsScreen} />
+              <Drawer.Screen name="WebView" component={WebView} />
+            </Drawer.Navigator>
+          </NavigationContainer>
+        </scrapeContext.Provider>
       </loginContext.Provider>
     </PaperProvider>
   );
