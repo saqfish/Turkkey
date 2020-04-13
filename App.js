@@ -1,12 +1,10 @@
 import 'react-native-get-random-values';
 import React, {useEffect, useState, useRef} from 'react';
 
-import {Appbar} from 'react-native-paper';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   NavigationContainer,
-  DrawerActions,
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
@@ -22,6 +20,8 @@ import QueueScreen from './components/Queue/Queue.js';
 import BlockListScreen from './components/Lists/Lists.js';
 import IncludeListScreen from './components/Lists/Lists.js';
 import SettingsScreen from './components/Settings/Settings.js';
+
+import AppBar from './components/AppBar/AppBar.js';
 
 export default function App() {
   const [login, setLogin] = useState(false);
@@ -69,28 +69,12 @@ export default function App() {
     ? customDark
     : {...customLight, colors: {...customLight.colors, primary: '#000000'}};
 
-  function AppBar({navigation}) {
-    return (
-      <Appbar>
-        <Appbar.Action
-          icon="menu"
-          onPress={() =>
-            navigation.current.dispatch(DrawerActions.toggleDrawer())
-          }
-        />
-        <Appbar.Action
-          icon={`brightness-${dark ? '5' : '4'}`}
-          onPress={() => setDark(!dark)}
-        />
-      </Appbar>
-    );
-  }
   return (
     <PaperProvider theme={theme}>
       <loginContext.Provider value={{login, setLogin}}>
-        <AppBar navigation={ref} />
+        <AppBar darkness={{dark, setDark}} navigation={ref} />
         <NavigationContainer ref={ref} theme={navigationTheme}>
-          <Drawer.Navigator initialRouteName="Queue">
+          <Drawer.Navigator initialRouteName="Scrape">
             <Drawer.Screen name="Scrape" component={ScrapeScreen} />
             <Drawer.Screen
               name="Queue"
@@ -100,6 +84,7 @@ export default function App() {
             <Drawer.Screen name="Block List" component={BlockListScreen} />
             <Drawer.Screen name="Include List" component={IncludeListScreen} />
             <Drawer.Screen name="Settings" component={SettingsScreen} />
+            <Drawer.Screen name="WebView" component={WebView} />
           </Drawer.Navigator>
         </NavigationContainer>
       </loginContext.Provider>

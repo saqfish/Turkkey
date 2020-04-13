@@ -23,7 +23,6 @@ const Queue = () => {
       .then(res => res.json())
       .then(res => {
         setQueueData(res.tasks);
-        console.log(res);
       })
       .catch(err => {
         console.log(err);
