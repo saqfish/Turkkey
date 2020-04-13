@@ -8,7 +8,7 @@ const ScrapeTable = props => {
     <DataTable>
       {bank.map(hit => {
         return (
-          <DataTable.Row>
+          <DataTable.Row key={hit.hit_set_id}>
             <DataTable.Cell>{hit.requester_name}</DataTable.Cell>
             <DataTable.Cell numeric>{hit.title}</DataTable.Cell>
           </DataTable.Row>

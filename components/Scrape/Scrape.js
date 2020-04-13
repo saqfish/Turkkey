@@ -4,8 +4,7 @@ import ScrapeTable from './ScrapeTable';
 
 import {scrapeContext} from '../Context';
 
-import {View} from 'react-native';
-import {ActivityIndicator, Colors} from 'react-native-paper';
+import {StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 
 const ScrapeOptions = () => {
   const {scrape} = useContext(scrapeContext);
@@ -13,14 +12,22 @@ const ScrapeOptions = () => {
     // console.log(scrape);
   }, [scrape]);
   return (
-    <View>
-      {typeof scrape.results === 'undefined' ? (
-        <ActivityIndicator animating={true} color={Colors.red800} />
-      ) : (
-        <ScrapeTable data={scrape.results} />
-      )}
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        {typeof scrape.results === 'undefined' ? null : (
+          <ScrapeTable data={scrape.results} />
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 0,
+  },
+  scrollView: {},
+});
 
 export default ScrapeOptions;
