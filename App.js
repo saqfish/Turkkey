@@ -15,7 +15,7 @@ import {loginContext} from './components/Context';
 import {scrapeContext} from './components/Context';
 
 import WebView from './components/WebView/WebView.js';
-import ScrapeScreen from './components/ScrapeOptions/ScrapeOptions.js';
+import ScrapeScreen from './components/Scrape/Scrape.js';
 import SettingsScreen from './components/Settings/Settings.js';
 
 import AppBar from './components/AppBar/AppBar.js';
