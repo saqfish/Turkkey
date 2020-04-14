@@ -5,6 +5,8 @@ import {DrawerActions} from '@react-navigation/native';
 
 import {scrapeContext} from '../Context';
 
+import BackgroundTimer from 'react-native-background-timer';
+
 let interval;
 
 const AppBar = props => {
@@ -18,7 +20,7 @@ const AppBar = props => {
     const masters = false;
     let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${0.01}`;
     if (!scraping) {
-      interval = setInterval(() => {
+      interval = BackgroundTimer.setInterval(() => {
         setScraping(true);
         fetch(`${url}`, {
           method: 'GET',
@@ -39,7 +41,7 @@ const AppBar = props => {
     }
   };
   const stopScrape = () => {
-    clearInterval(interval);
+    BackgroundTimer.clearInterval(interval);
     setScraping(false);
   };
 
@@ -51,6 +53,7 @@ const AppBar = props => {
           navigation.current.dispatch(DrawerActions.toggleDrawer())
         }
       />
+      <Appbar.Content />
       <Appbar.Action
         icon={`brightness-${dark ? '5' : '4'}`}
         onPress={() => setDark(!dark)}
