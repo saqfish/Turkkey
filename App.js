@@ -1,7 +1,7 @@
 import 'react-native-get-random-values';
 import React, {useState, useRef} from 'react';
 
-import {Provider as PaperProvider} from 'react-native-paper';
+import {Snackbar, Provider as PaperProvider} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   NavigationContainer,
@@ -13,6 +13,7 @@ const Drawer = createDrawerNavigator();
 
 import {loginContext} from './components/Context';
 import {scrapeContext} from './components/Context';
+import {snackBarContext} from './components/Context';
 
 import WebView from './components/WebView/WebView.js';
 import ScrapeScreen from './components/Scrape/Scrape.js';
@@ -23,6 +24,11 @@ import AppBar from './components/AppBar/AppBar.js';
 export default function App() {
   const [login, setLogin] = useState(false);
   const ref = useRef(null);
+
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
+  const showSnackBar = () => setSnackBarVisible(true);
+
+  const dismissSnackBar = () => setSnackBarVisible(false);
 
   const fonts = {
     regular: {
@@ -45,7 +51,7 @@ export default function App() {
 
   const customDark = {
     ...DarkTheme,
-    colors: {...DarkTheme.colors, primary: '#424242'},
+    colors: {...DarkTheme.colors, accent: '#000000', primary: '#424242'},
     fonts,
     animation: {
       scale: 1.0,
@@ -53,7 +59,7 @@ export default function App() {
   };
   const customLight = {
     ...DefaultTheme,
-    colors: {...DefaultTheme.colors, primary: '#fff'},
+    colors: {...DefaultTheme.colors, accent: '#000000', primary: '#fff'},
     fonts,
     animation: {
       scale: 1.0,
@@ -71,14 +77,29 @@ export default function App() {
     <PaperProvider theme={theme}>
       <loginContext.Provider value={{login, setLogin}}>
         <scrapeContext.Provider value={{scrape, setScrape}}>
-          <AppBar darkness={{dark, setDark}} navigation={ref} />
-          <NavigationContainer ref={ref} theme={navigationTheme}>
-            <Drawer.Navigator initialRouteName="Scrape">
-              <Drawer.Screen name="Scrape" component={ScrapeScreen} />
-              <Drawer.Screen name="Settings" component={SettingsScreen} />
-              <Drawer.Screen name="WebView" component={WebView} />
-            </Drawer.Navigator>
-          </NavigationContainer>
+          <snackBarContext.Provider value={{showSnackBar}}>
+            <AppBar darkness={{dark, setDark}} navigation={ref} />
+            <NavigationContainer ref={ref} theme={navigationTheme}>
+              <Drawer.Navigator initialRouteName="Scrape">
+                <Drawer.Screen name="Scrape" component={ScrapeScreen} />
+                <Drawer.Screen name="Settings" component={SettingsScreen} />
+                <Drawer.Screen name="WebView" component={WebView} />
+              </Drawer.Navigator>
+            </NavigationContainer>
+            <Snackbar
+              style={{backgroundColor: 'red'}}
+              visible={snackBarVisible}
+              onDismiss={dismissSnackBar}
+              action={{
+                label: 'Login',
+                onPress: () => {
+                  console.log(ref.current.navigate);
+                  ref.current.navigate('WebView');
+                },
+              }}>
+              {'Error getting data. Are you logged in?'}
+            </Snackbar>
+          </snackBarContext.Provider>
         </scrapeContext.Provider>
       </loginContext.Provider>
     </PaperProvider>
