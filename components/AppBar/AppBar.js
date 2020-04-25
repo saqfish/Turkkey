@@ -1,19 +1,18 @@
 import React, {useContext, useState} from 'react';
 import {Appbar} from 'react-native-paper';
 
-import {DrawerActions} from '@react-navigation/native';
+import {scrapeContext} from '../Context';
 
-import {snackBarContext, scrapeContext} from '../Context';
+import {DrawerActions} from '@react-navigation/native';
 
 import BackgroundTimer from 'react-native-background-timer';
 
 let interval;
 
 const AppBar = props => {
-  const {navigation, darkness} = props;
+  const {navigation, error, darkness} = props;
   const {dark, setDark} = darkness;
   const {setScrape} = useContext(scrapeContext);
-  const {showSnackBar} = useContext(snackBarContext);
 
   const [scraping, setScraping] = useState(false);
   const runScrape = () => {
@@ -34,7 +33,9 @@ const AppBar = props => {
           .then(res => res.json())
           .then(res => setScrape(res))
           .catch(() => {
-            showSnackBar();
+            error('Error getting data, are you loged in?', 'login').then(() =>
+              navigation.current.navigate('WebView'),
+            );
             stopScrape();
           });
       }, 1000);

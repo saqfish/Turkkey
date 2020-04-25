@@ -1,7 +1,7 @@
 import 'react-native-get-random-values';
 import React, {useState, useRef} from 'react';
 
-import {Snackbar, Provider as PaperProvider} from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   NavigationContainer,
@@ -13,7 +13,7 @@ const Drawer = createDrawerNavigator();
 
 import {loginContext} from './components/Context';
 import {scrapeContext} from './components/Context';
-import {snackBarContext} from './components/Context';
+import ErrorBar from './components/AppBar/ErrorBar';
 
 import WebView from './components/WebView/WebView.js';
 import ScrapeScreen from './components/Scrape/Scrape.js';
@@ -25,10 +25,25 @@ export default function App() {
   const [login, setLogin] = useState(false);
   const ref = useRef(null);
 
-  const [snackBarVisible, setSnackBarVisible] = useState(false);
-  const showSnackBar = () => setSnackBarVisible(true);
+  const [snackBarState, setSnackBarState] = useState({errorBar: null});
+  const handleErrorBarClose = () => {
+    const {errorBar} = snackBarState;
+    setSnackBarState({...errorBar, visible: false});
+  };
 
-  const dismissSnackBar = () => setSnackBarVisible(false);
+  const error = (text, actionText, type) => {
+    return new Promise((resolve, reject) => {
+      setSnackBarState({
+        errorBar: {
+          text,
+          action: {label: actionText, onPress: resolve},
+          resolve,
+          reject,
+          visible: true,
+        },
+      });
+    });
+  };
 
   const fonts = {
     regular: {
@@ -77,29 +92,22 @@ export default function App() {
     <PaperProvider theme={theme}>
       <loginContext.Provider value={{login, setLogin}}>
         <scrapeContext.Provider value={{scrape, setScrape}}>
-          <snackBarContext.Provider value={{showSnackBar}}>
-            <AppBar darkness={{dark, setDark}} navigation={ref} />
-            <NavigationContainer ref={ref} theme={navigationTheme}>
-              <Drawer.Navigator initialRouteName="Scrape">
-                <Drawer.Screen name="Scrape" component={ScrapeScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
-                <Drawer.Screen name="WebView" component={WebView} />
-              </Drawer.Navigator>
-            </NavigationContainer>
-            <Snackbar
-              style={{backgroundColor: 'red'}}
-              visible={snackBarVisible}
-              onDismiss={dismissSnackBar}
-              action={{
-                label: 'Login',
-                onPress: () => {
-                  console.log(ref.current.navigate);
-                  ref.current.navigate('WebView');
-                },
-              }}>
-              {'Error getting data. Are you logged in?'}
-            </Snackbar>
-          </snackBarContext.Provider>
+          <AppBar error={error} darkness={{dark, setDark}} navigation={ref} />
+          <NavigationContainer ref={ref} theme={navigationTheme}>
+            <Drawer.Navigator initialRouteName="Scrape">
+              <Drawer.Screen name="Scrape" component={ScrapeScreen} />
+              <Drawer.Screen name="Settings" component={SettingsScreen} />
+              <Drawer.Screen name="WebView" component={WebView} />
+            </Drawer.Navigator>
+          </NavigationContainer>
+          {snackBarState.errorBar && (
+            <ErrorBar
+              {...snackBarState.errorBar}
+              visible={snackBarState.errorBar.visible}
+              action={snackBarState.errorBar.action}
+              onDismiss={handleErrorBarClose}
+            />
+          )}
         </scrapeContext.Provider>
       </loginContext.Provider>
     </PaperProvider>

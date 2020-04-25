@@ -6,9 +6,6 @@ import {loginContext} from '../Context';
 
 const WebView = ({navigation}) => {
   const {login, setLogin} = useContext(loginContext);
-  useEffect(() => {
-    if (login) navigation.goBack();
-  }, [login]);
   return (
     <View style={{flex: 1}}>
       <ReactWebView
