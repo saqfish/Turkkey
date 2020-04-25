@@ -1,8 +1,16 @@
 import 'react-native-get-random-values';
 import React, {useState, useRef} from 'react';
+import {View, Text} from 'react-native';
 
-import {Provider as PaperProvider} from 'react-native-paper';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Divider, Provider as PaperProvider} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 import {
   NavigationContainer,
   DefaultTheme,
@@ -88,16 +96,88 @@ export default function App() {
     ? customDark
     : {...customLight, colors: {...customLight.colors, primary: '#000000'}};
 
+  function CustomDrawerContent(props) {
+    return (
+      <DrawerContentScrollView {...props}>
+        <View>
+          <View
+            style={{
+              backgroundColor: theme.colors.primary,
+              height: 80,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{color: theme.colors.text, fontSize: 20}}>Header</Text>
+          </View>
+          <DrawerItemList {...props} />
+          <Divider />
+          <View style={{}}>
+            <DrawerItem
+              icon={() => (
+                <Icon
+                  name={`brightness-${!dark ? '5' : '4'}`}
+                  color={theme.colors.text}
+                  size={24}
+                />
+              )}
+              labelStyle={{color: theme.colors.text}}
+              label={`${!dark ? 'Light' : 'Dark'} mode`}
+              onPress={() => setDark(!dark)}
+            />
+          </View>
+        </View>
+      </DrawerContentScrollView>
+    );
+  }
+
   return (
     <PaperProvider theme={theme}>
       <loginContext.Provider value={{login, setLogin}}>
         <scrapeContext.Provider value={{scrape, setScrape}}>
           <AppBar error={error} darkness={{dark, setDark}} navigation={ref} />
           <NavigationContainer ref={ref} theme={navigationTheme}>
-            <Drawer.Navigator initialRouteName="Scrape">
-              <Drawer.Screen name="Scrape" component={ScrapeScreen} />
-              <Drawer.Screen name="Settings" component={SettingsScreen} />
-              <Drawer.Screen name="WebView" component={WebView} />
+            <Drawer.Navigator
+              initialRouteName="Scrape"
+              drawerContentOptions={{
+                activeTintColor: theme.colors.text,
+                backgroundColor: theme.colors.primary,
+                contentContainerStyle: {},
+              }}
+              drawerContent={props => <CustomDrawerContent {...props} />}>
+              <Drawer.Screen
+                options={{
+                  drawerIcon: () => (
+                    <Icon
+                      name="currency-usd"
+                      color={theme.colors.text}
+                      size={24}
+                    />
+                  ),
+                  drawerLabel: 'Hits',
+                }}
+                name="Scrape"
+                component={ScrapeScreen}
+              />
+              <Drawer.Screen
+                options={{
+                  drawerIcon: () => (
+                    <Icon name="settings" color={theme.colors.text} size={24} />
+                  ),
+                  drawerLabel: 'Settings',
+                }}
+                name="Settings"
+                component={SettingsScreen}
+              />
+              <Drawer.Screen
+                options={{
+                  drawerIcon: () => (
+                    <Icon name="web" color={theme.colors.text} size={24} />
+                  ),
+                  drawerLabel: 'Web',
+                }}
+                name="WebView"
+                component={WebView}
+              />
             </Drawer.Navigator>
           </NavigationContainer>
           {snackBarState.errorBar && (
