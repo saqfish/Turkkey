@@ -7,50 +7,51 @@ import {DrawerActions} from '@react-navigation/native';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-let interval;
-
 const AppBar = props => {
-  const {navigation, error, darkness} = props;
-  const {dark, setDark} = darkness;
+  const {navigation, error} = props;
   const {setScrape} = useContext(scrapeContext);
 
   const [scraping, setScraping] = useState(false);
+  const [interval, setInterval] = useState(null);
   const runScrape = () => {
     const qual = true;
     const masters = false;
     let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${0.01}`;
-    if (!scraping) {
-      interval = BackgroundTimer.setInterval(() => {
-        setScraping(true);
-        fetch(`${url}`, {
-          method: 'GET',
-          credentials: 'same-origin',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then(res => res.json())
-          .then(res => setScrape(res))
-          .catch(() => {
-            error('Error getting data, are you loged in?', 'login').then(() =>
-              navigation.current.navigate('WebView'),
-            );
-            stopScrape();
-          });
-      }, 1000);
+    if (!scraping && interval === null) {
+      setInterval(
+        BackgroundTimer.setInterval(() => {
+          setScraping(true);
+          fetch(`${url}`, {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+            .then(res => res.json())
+            .then(res => setScrape(res))
+            .catch(() => {
+              error('Error getting data, are you loged in?', 'login').then(() =>
+                navigation.current.navigate('WebView'),
+              );
+              stopScrape();
+            });
+        }, 1000),
+      );
     } else {
       stopScrape();
     }
   };
   const stopScrape = () => {
     BackgroundTimer.clearInterval(interval);
+    setInterval(null);
     setScraping(false);
   };
 
   return (
     <>
-      <Appbar>
+      <Appbar.Header>
         <Appbar.Action
           icon="menu"
           onPress={() =>
@@ -59,14 +60,11 @@ const AppBar = props => {
         />
         <Appbar.Content />
         <Appbar.Action
-          icon={`brightness-${dark ? '5' : '4'}`}
-          onPress={() => setDark(!dark)}
-        />
-        <Appbar.Action
-          icon={scraping ? 'star' : 'star-outline'}
+          icon={scraping ? 'stop-circle' : 'flash-circle'}
           onPress={() => runScrape()}
+          disabled={(interval && !scraping) || (!interval && scraping)}
         />
-      </Appbar>
+      </Appbar.Header>
     </>
   );
 };
