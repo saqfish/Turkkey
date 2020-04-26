@@ -1,19 +1,49 @@
 import React from 'react';
-import {DataTable} from 'react-native-paper';
+import {View} from 'react-native';
+import {IconButton, Card, Caption} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ScrapeTable = props => {
   const bank = props.data;
   return (
-    <DataTable>
+    <View>
       {bank.map(hit => {
         return (
-          <DataTable.Row key={hit.hit_set_id}>
-            <DataTable.Cell>{hit.requester_name}</DataTable.Cell>
-            <DataTable.Cell numeric>{hit.title}</DataTable.Cell>
-          </DataTable.Row>
+          <View key={hit.hit_set_id}>
+            <Card
+              onPress={() => {
+                console.log('Card press');
+              }}>
+              <Card.Title
+                title={
+                  hit.title.length > 35
+                    ? hit.title.substring(0, 35 - 3) + '...'
+                    : hit.title
+                }
+                subtitle={
+                  <Caption>
+                    <Icon name="currency-usd" color={'green'} />
+                    {hit.monetary_reward.amount_in_dollars.toFixed(2)}
+                    <Icon name="arrow-bottom-right" color={'red'} />
+                    {hit.requester_name}
+                  </Caption>
+                }
+                right={inProps => (
+                  <IconButton
+                    {...inProps}
+                    icon="chevron-right"
+                    onPress={() => {}}
+                  />
+                )}
+              />
+              <Card.Content>
+                <Caption>{hit.description}</Caption>
+              </Card.Content>
+            </Card>
+          </View>
         );
       })}
-    </DataTable>
+    </View>
   );
 };
 
