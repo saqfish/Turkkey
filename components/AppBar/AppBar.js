@@ -29,13 +29,20 @@ const AppBar = props => {
               'Content-Type': 'application/json',
             },
           })
-            .then(res => res.json())
+            .then(res => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                throw Error();
+              }
+            })
             .then(res => setScrape(res))
             .catch(() => {
-              error('Error getting data, are you loged in?', 'login').then(() =>
-                navigation.current.navigate('WebView'),
-              );
-              stopScrape();
+              if (navigation.current.getRootState().index === 0) {
+                error('Error getting data, are you loged in?', 'login').then(
+                  () => navigation.current.navigate('WebView'),
+                );
+              }
             });
         }, 1000),
       );
