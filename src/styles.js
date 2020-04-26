@@ -24,7 +24,7 @@ const darkTheme = {
   colors: {
     ...DarkTheme.colors,
     primary: '#363640',
-    accent: '#03dac6',
+    accent: '#000000',
     background: '#121212',
     surface: '#121212',
     error: '#CF6679',
@@ -42,7 +42,7 @@ const lightTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#6200ee',
-    accent: '#03dac6',
+    accent: '#000000',
     background: '#FFFFFF',
     surface: '#FFFFFF',
     error: '#B00020',
