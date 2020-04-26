@@ -21,13 +21,11 @@ const Drawer = props => {
     <NavigationContainer ref={navigation} theme={theme}>
       <DrawerNav.Navigator
         initialRouteName="Scrape"
-        drawerContentOptions={
-          {
-            //activeTintColor: theme.colors.text,
-            //backgroundColor: theme.colors.primary,
-            //contentContainerStyle: {},
-          }
-        }
+        drawerContentOptions={{
+          activeTintColor: theme.colors.text,
+          // backgroundColor: theme.colors.primary,
+          ainerStyle: {},
+        }}
         drawerContent={inProps => (
           <DrawerContent {...inProps} darkness={{dark, setDark}} />
         )}>

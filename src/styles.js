@@ -22,7 +22,17 @@ const fonts = {
 
 const darkTheme = {
   ...DarkTheme,
-  colors: {...DarkTheme.colors, accent: '#000000', primary: '#424242'},
+  colors: {
+    ...DarkTheme.colors,
+    primary: '#363640',
+    accent: '#03dac6',
+    background: '#121212',
+    surface: '#121212',
+    error: '#CF6679',
+    text: '#FFFFFF',
+    onBackground: '#FFFFFF',
+    onSurface: '#FFFFFF',
+  },
   fonts,
   animation: {
     scale: 1.0,
@@ -30,7 +40,17 @@ const darkTheme = {
 };
 const lightTheme = {
   ...DefaultTheme,
-  colors: {...DefaultTheme.colors, accent: '#000000', primary: '#fff'},
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#6200ee',
+    accent: '#03dac6',
+    background: '#FFFFFF',
+    surface: '#FFFFFF',
+    error: '#B00020',
+    text: '#000000',
+    onBackground: '#000000',
+    onSurface: '#000000',
+  },
   fonts,
   animation: {
     scale: 1.0,

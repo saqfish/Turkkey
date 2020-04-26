@@ -57,22 +57,20 @@ const AppBar = props => {
   };
 
   return (
-    <>
-      <Appbar.Header>
-        <Appbar.Action
-          icon="menu"
-          onPress={() =>
-            navigation.current.dispatch(DrawerActions.toggleDrawer())
-          }
-        />
-        <Appbar.Content />
-        <Appbar.Action
-          icon={scraping ? 'stop-circle' : 'flash-circle'}
-          onPress={() => runScrape()}
-          disabled={(interval && !scraping) || (!interval && scraping)}
-        />
-      </Appbar.Header>
-    </>
+    <Appbar.Header>
+      <Appbar.Action
+        icon="menu"
+        onPress={() =>
+          navigation.current.dispatch(DrawerActions.toggleDrawer())
+        }
+      />
+      <Appbar.Content />
+      <Appbar.Action
+        icon={scraping ? 'stop-circle' : 'flash-circle'}
+        onPress={() => runScrape()}
+        disabled={(interval && !scraping) || (!interval && scraping)}
+      />
+    </Appbar.Header>
   );
 };
 
