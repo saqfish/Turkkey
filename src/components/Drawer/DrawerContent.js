@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Divider} from 'react-native-paper';
-import {styles} from '../../styles';
-
 import {useTheme} from 'react-native-paper';
+
+import {StyleSheet} from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -17,12 +17,26 @@ const DrawerContent = props => {
   const theme = useTheme();
   const {dark, setDark} = props.darkness;
 
+  const styles = StyleSheet.create({
+    headerContainer: {
+      // backgroundColor: theme.colors.primary,
+      height: 80,
+      // alignItems: 'center',
+      padding: 12,
+      justifyContent: 'center',
+    },
+    headerLabel: {
+      color: theme.colors.text,
+      fontSize: 20,
+    },
+  });
   return (
     <DrawerContentScrollView {...props}>
       <View>
         <View style={styles.headerContainer}>
-          <Text style={styles.headerLabel}>Header</Text>
+          <Text style={styles.headerLabel}>Scraper</Text>
         </View>
+        <Divider />
         <DrawerItemList {...props} />
         <Divider />
         <View style={{}}>
@@ -43,4 +57,5 @@ const DrawerContent = props => {
     </DrawerContentScrollView>
   );
 };
+
 export default DrawerContent;

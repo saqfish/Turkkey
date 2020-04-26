@@ -1,4 +1,3 @@
-import {StyleSheet} from 'react-native';
 import {DefaultTheme, DarkTheme} from '@react-navigation/native';
 
 const fonts = {
@@ -56,17 +55,4 @@ const lightTheme = {
     scale: 1.0,
   },
 };
-const styles = StyleSheet.create({
-  headerContainer: {
-    //backgroundColor: theme.colors.primary,
-    height: 80,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerLabel: {
-    //color: theme.colors.text,
-    color: 'black',
-    fontSize: 20,
-  },
-});
-export {styles, darkTheme, lightTheme};
+export {darkTheme, lightTheme};
