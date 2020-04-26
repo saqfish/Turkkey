@@ -1,20 +1,13 @@
-import React, {useEffect, useContext} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import ReactWebView from 'react-native-webview';
 
-import {loginContext} from '../Context';
-
 const WebView = ({navigation}) => {
-  const {login, setLogin} = useContext(loginContext);
   return (
     <View style={{flex: 1}}>
       <ReactWebView
-        source={{uri: 'https://worker.mturk.com/'}}
-        onNavigationStateChange={state => {
-          console.log(state.url);
-          let expression = /^(https|http):\/\/(worker.mturk.com)\/*/g;
-          setLogin(state.url.match(expression));
-        }}
+        source={{uri: 'https://worker.mturk.com/dashboard'}}
+        onNavigationStateChange={state => {}}
         onError={() => console.warn('error')}
       />
     </View>
