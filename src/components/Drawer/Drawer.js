@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import WebView from '../WebView/WebView.js';
 import ScrapeScreen from '../Scrape/Scrape.js';
 import SettingsScreen from '../Settings/Settings.js';
+import HitInfo from '../HitInfo/HitInfo.js';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -13,7 +14,6 @@ import DrawerContent from './DrawerContent';
 const DrawerNav = createDrawerNavigator();
 
 const Drawer = props => {
-  console.log(props);
   const {navigation, theme, darkness} = props;
   const {dark, setDark} = darkness;
 
@@ -24,7 +24,6 @@ const Drawer = props => {
         drawerContentOptions={{
           activeTintColor: theme.colors.text,
           // backgroundColor: theme.colors.primary,
-          ainerStyle: {},
         }}
         drawerContent={inProps => (
           <DrawerContent {...inProps} darkness={{dark, setDark}} />
@@ -59,6 +58,7 @@ const Drawer = props => {
           name="WebView"
           component={WebView}
         />
+        <DrawerNav.Screen name="HitInfo" component={HitInfo} />
       </DrawerNav.Navigator>
     </NavigationContainer>
   );

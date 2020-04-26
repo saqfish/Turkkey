@@ -6,7 +6,7 @@ import {scrapeContext} from '../Context';
 
 import {StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 
-const ScrapeOptions = () => {
+const Scrape = props => {
   const {scrape} = useContext(scrapeContext);
   useEffect(() => {
     // console.log(scrape);
@@ -15,7 +15,7 @@ const ScrapeOptions = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         {typeof scrape.results === 'undefined' ? null : (
-          <ScrapeTable data={scrape.results} />
+          <ScrapeTable navigation={props.navigation} data={scrape.results} />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   scrollView: {},
 });
 
-export default ScrapeOptions;
+export default Scrape;

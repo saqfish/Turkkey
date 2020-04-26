@@ -4,7 +4,7 @@ import {IconButton, Card, Caption} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ScrapeTable = props => {
-  const bank = props.data;
+  const {data: bank, navigation} = props;
   return (
     <View>
       {bank.map(hit => {
@@ -12,7 +12,7 @@ const ScrapeTable = props => {
           <View key={hit.hit_set_id}>
             <Card
               onPress={() => {
-                console.log('Card press');
+                navigation.navigate('HitInfo', {hit});
               }}>
               <Card.Title
                 title={
@@ -32,7 +32,9 @@ const ScrapeTable = props => {
                   <IconButton
                     {...inProps}
                     icon="chevron-right"
-                    onPress={() => {}}
+                    onPress={() => {
+                      navigation.navigate('HitInfo', {hit});
+                    }}
                   />
                 )}
               />

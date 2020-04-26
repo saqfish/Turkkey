@@ -16,6 +16,13 @@ import {
 const DrawerContent = props => {
   const theme = useTheme();
   const {dark, setDark} = props.darkness;
+  const filterdProps = {
+    ...props,
+    state: {
+      ...props.state,
+      routes: props.state.routes.filter(route => route.name !== 'HitInfo'),
+    },
+  };
 
   const styles = StyleSheet.create({
     headerContainer: {
@@ -37,7 +44,7 @@ const DrawerContent = props => {
           <Text style={styles.headerLabel}>Scraper</Text>
         </View>
         <Divider />
-        <DrawerItemList {...props} />
+        <DrawerItemList {...filterdProps} />
         <Divider />
         <View style={{}}>
           <DrawerItem
