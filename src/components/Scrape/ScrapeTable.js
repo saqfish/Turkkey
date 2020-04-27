@@ -43,13 +43,24 @@ const ScrapeTable = props => {
                 navigation.navigate('HitInfo', {hit});
               }}>
               <Card.Title
-                subtitle={<Subheading>{hit.title}</Subheading>}
+                subtitle={
+                  <>
+                    <Subheading>
+                      <Icon name="currency-usd" color={'green'} size={16} />
+                      {hit.monetary_reward.amount_in_dollars.toFixed(2)}
+                    </Subheading>
+                    <Subheading>
+                      <Icon
+                        name="information-variant"
+                        color={'grey'}
+                        size={16}
+                      />
+                      {hit.title}
+                    </Subheading>
+                  </>
+                }
                 title={
                   <>
-                    <Title>
-                      <Icon name="currency-usd" color={'grey'} size={20} />
-                      {hit.monetary_reward.amount_in_dollars.toFixed(2)}
-                    </Title>
                     <Title>
                       {hasRating ? (
                         <Text>
@@ -78,11 +89,7 @@ const ScrapeTable = props => {
 };
 
 const styles = StyleSheet.create({
-  cardRight: {
-    marginVertical: 0,
-    paddingRight: 16,
-    margin: 0,
-  },
+  cardRight: {},
   cardContent: {
     marginVertical: 0,
   },

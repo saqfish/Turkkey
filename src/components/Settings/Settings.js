@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import {Caption} from 'react-native-paper';
 
 const Settings = () => {
+  console.log('settings-tick');
   return (
     <View style={{flex: 1}}>
       <Caption>Settings</Caption>
