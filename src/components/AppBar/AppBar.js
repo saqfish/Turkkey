@@ -6,6 +6,7 @@ import {scrapeContext} from '../Context';
 import {DrawerActions} from '@react-navigation/native';
 
 import BackgroundTimer from 'react-native-background-timer';
+import {getTO} from './turkOpticon';
 
 const AppBar = props => {
   const {navigation, error} = props;
@@ -13,6 +14,36 @@ const AppBar = props => {
 
   const [scraping, setScraping] = useState(false);
   const [interval, setInterval] = useState(null);
+
+  const getHits = (url, to) => {
+    return new Promise((resolve, reject) => {
+      fetch(url, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw Error();
+          }
+        })
+        .then(res => {
+          getTO(res.results)
+            .then(hits => resolve(res.results))
+            .catch(() => resolve(res.results));
+        })
+        .catch(getHitsError => {
+          console.log(`getHits Error: ${getHitsError}`);
+          reject();
+        });
+    });
+  };
+
   const runScrape = () => {
     const qual = true;
     const masters = false;
@@ -21,23 +52,12 @@ const AppBar = props => {
       setInterval(
         BackgroundTimer.setInterval(() => {
           setScraping(true);
-          fetch(`${url}`, {
-            method: 'GET',
-            credentials: 'same-origin',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          })
+          getHits(url, false)
             .then(res => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw Error();
-              }
+              setScrape(res);
             })
-            .then(res => setScrape(res))
-            .catch(() => {
+            .catch(runScrapeError => {
+              console.log(`runScrape Error: ${runScrapeError}`);
               if (navigation.current.getRootState().index === 0) {
                 error('Error getting data, are you loged in?', 'login').then(
                   () => navigation.current.navigate('WebView'),

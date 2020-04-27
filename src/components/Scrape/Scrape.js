@@ -14,8 +14,8 @@ const Scrape = props => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        {typeof scrape.results === 'undefined' ? null : (
-          <ScrapeTable navigation={props.navigation} data={scrape.results} />
+        {typeof scrape === 'undefined' || scrape.length < 1 ? null : (
+          <ScrapeTable navigation={props.navigation} data={scrape} />
         )}
       </ScrollView>
     </SafeAreaView>

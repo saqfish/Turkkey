@@ -33,7 +33,7 @@ export default function App() {
   };
 
   const [dark, setDark] = useState(true);
-  const [scrape, setScrape] = useState({});
+  const [scrape, setScrape] = useState([]);
   const theme = dark ? darkTheme : lightTheme;
 
   return (
