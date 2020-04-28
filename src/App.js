@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React, {useState, useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import BackgroundTimer from 'react-native-background-timer';
 import {Provider as PaperProvider} from 'react-native-paper';
 
@@ -18,7 +18,8 @@ export default function App() {
   const [interval, setInterval] = useState(null);
 
   const [dark, setDark] = useState(true);
-  const ref = useRef(null);
+  const navigationRef = useRef(null);
+  const scrapeRef = useRef(null);
 
   const theme = dark ? darkTheme : lightTheme;
 
@@ -50,13 +51,21 @@ export default function App() {
           setScraping(true);
           getHits(false)
             .then(res => {
+              res.forEach(hit => {
+                hit.isNew = scrapeRef.current.some(value => {
+                  return value.hit_set_id === hit.hit_set_id;
+                });
+                if (!hit.isNew) {
+                  console.log(`${hit.hit_set_id} is new`);
+                }
+              });
               setScrape(res);
             })
             .catch(runScrapeError => {
               console.log(`runScrape Error: ${runScrapeError}`);
-              if (ref.current.getRootState().index === 0) {
+              if (navigationRef.current.getRootState().index === 0) {
                 error('Error getting data, are you loged in?', 'login').then(
-                  () => ref.current.navigate('WebView'),
+                  () => navigationRef.current.navigate('WebView'),
                 );
               }
             });
@@ -66,6 +75,9 @@ export default function App() {
       stopScrape();
     }
   };
+  useEffect(() => {
+    scrapeRef.current = scrape;
+  }, [scrape]);
   const stopScrape = () => {
     BackgroundTimer.clearInterval(interval);
     setInterval(null);
@@ -75,8 +87,15 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <scrapeContext.Provider value={{scrape, setScrape}}>
-        <AppBar func={{scraping, interval, runScrape}} navigation={ref} />
-        <Drawer theme={theme} navigation={ref} darkness={{dark, setDark}} />
+        <AppBar
+          func={{scraping, interval, runScrape}}
+          navigation={navigationRef}
+        />
+        <Drawer
+          theme={theme}
+          navigation={navigationRef}
+          darkness={{dark, setDark}}
+        />
         {snackBarState.errorBar && (
           <ErrorBar
             {...snackBarState.errorBar}

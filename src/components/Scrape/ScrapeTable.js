@@ -66,7 +66,7 @@ const ScrapeTable = props => {
                     </Title>
                   </>
                 }
-                right={inProps => <Text>10:00PM</Text>}
+                right={inProps => (hit.isNew ? null : <Text>New!</Text>)}
                 rightStyle={styles.cardRight}
               />
             </Card>
