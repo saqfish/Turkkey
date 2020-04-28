@@ -1,5 +1,5 @@
 import React from 'react';
-import {Appbar} from 'react-native-paper';
+import {Button, Appbar} from 'react-native-paper';
 
 import {DrawerActions} from '@react-navigation/native';
 
@@ -16,11 +16,14 @@ const AppBar = props => {
         }
       />
       <Appbar.Content />
-      <Appbar.Action
+      <Appbar.Action />
+      <Button
         icon={scraping ? 'stop-circle' : 'flash-circle'}
+        mode="contained"
         onPress={() => runScrape()}
-        disabled={(interval && !scraping) || (!interval && scraping)}
-      />
+        disabled={(interval && !scraping) || (!interval && scraping)}>
+        {scraping ? 'Stop' : 'Start'}
+      </Button>
     </Appbar.Header>
   );
 };

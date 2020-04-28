@@ -1,13 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {
-  Card,
-  Text,
-  Title,
-  Caption,
-  Divider,
-  Subheading,
-} from 'react-native-paper';
+import {Card, Text, Title, Divider, Subheading} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ScrapeTable = props => {
@@ -22,7 +15,7 @@ const ScrapeTable = props => {
       ? 'arrow-top-right'
       : pay > 2
       ? 'arrow-bottom-right'
-      : 'arrow-bottom-right';
+      : 'arrow-down';
   };
   return (
     <View>
@@ -32,7 +25,7 @@ const ScrapeTable = props => {
           typeof hit.rating.attrs !== 'undefined' &&
           typeof hit.rating.attrs.pay !== 'undefined';
         const ratingProp = {
-          name: hasRating ? getPayIcon(hit.rating.attrs.pay) : null,
+          name: hasRating ? getPayIcon(hit.rating.attrs.pay) : 'help',
           color: hasRating ? getPayColor(hit.rating.attrs.pay) : 'grey',
           size: 20,
         };
@@ -73,12 +66,9 @@ const ScrapeTable = props => {
                     </Title>
                   </>
                 }
-                right={inProps => {}}
+                right={inProps => <Text>10:00PM</Text>}
                 rightStyle={styles.cardRight}
               />
-              <Card.Content style={styles.cardContent}>
-                <Caption>{hit.description}</Caption>
-              </Card.Content>
             </Card>
             <Divider />
           </View>
@@ -89,7 +79,10 @@ const ScrapeTable = props => {
 };
 
 const styles = StyleSheet.create({
-  cardRight: {},
+  cardRight: {
+    marginVertical: 0,
+    paddingRight: 10,
+  },
   cardContent: {
     marginVertical: 0,
   },

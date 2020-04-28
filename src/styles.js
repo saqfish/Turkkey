@@ -41,7 +41,7 @@ const lightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#6200ee',
+    primary: '#3f51b5',
     accent: '#000000',
     background: '#FFFFFF',
     surface: '#FFFFFF',
