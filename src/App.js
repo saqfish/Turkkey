@@ -13,13 +13,17 @@ import ErrorBar from './components/ErrorBar';
 import Drawer from './components/Drawer/Drawer';
 
 export default function App() {
-  const [scrape, setScrape] = useState([]);
+  const [scrapeState, setScrapeState] = useState([]);
+  const [newHitsState, setNewHitsState] = useState([]);
   const [scraping, setScraping] = useState(false);
   const [interval, setInterval] = useState(null);
+
+  const [filterState, setFilterState] = useState(0);
 
   const [dark, setDark] = useState(true);
   const navigationRef = useRef(null);
   const scrapeRef = useRef(null);
+  const newHitsRef = useRef(null);
 
   const theme = dark ? darkTheme : lightTheme;
 
@@ -47,19 +51,25 @@ export default function App() {
   const runScrape = () => {
     if (!scraping && interval === null) {
       setInterval(
-        BackgroundTimer.setInterval(() => {
+        BackgroundTimer.setInterval(async () => {
+          let newHits = [];
           setScraping(true);
-          getHits(false)
+          const hits = await getHits(false)
             .then(res => {
               res.forEach(hit => {
-                hit.isNew = scrapeRef.current.some(value => {
+                hit.isNew = !scrapeRef.current.some(value => {
                   return value.hit_set_id === hit.hit_set_id;
                 });
-                if (!hit.isNew) {
-                  console.log(`${hit.hit_set_id} is new`);
+                if (hit.isNew) {
+                  newHits.push(hit);
                 }
               });
-              setScrape(res);
+              if (filterState === 1) {
+                let arr = [...newHitsRef.current, ...newHits];
+                setNewHitsState(arr);
+                return arr;
+              }
+              return res;
             })
             .catch(runScrapeError => {
               console.log(`runScrape Error: ${runScrapeError}`);
@@ -69,6 +79,9 @@ export default function App() {
                 );
               }
             });
+
+          console.log(`hits length: ${hits.length}`);
+          setScrapeState(hits);
         }, 1000),
       );
     } else {
@@ -76,8 +89,13 @@ export default function App() {
     }
   };
   useEffect(() => {
-    scrapeRef.current = scrape;
-  }, [scrape]);
+    scrapeRef.current = scrapeState;
+  }, [scrapeState]);
+
+  useEffect(() => {
+    newHitsRef.current = newHitsState;
+  }, [newHitsState]);
+
   const stopScrape = () => {
     BackgroundTimer.clearInterval(interval);
     setInterval(null);
@@ -86,7 +104,11 @@ export default function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <scrapeContext.Provider value={{scrape, setScrape}}>
+      <scrapeContext.Provider
+        value={{
+          filter: {filterState, setFilterState},
+          scrape: {scrapeState, setScrapeState},
+        }}>
         <AppBar
           func={{scraping, interval, runScrape}}
           navigation={navigationRef}

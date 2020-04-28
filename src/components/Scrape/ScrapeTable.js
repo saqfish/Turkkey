@@ -1,10 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Text, Title, Divider, Subheading} from 'react-native-paper';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ScrapeTable = props => {
-  const {data: bank, navigation} = props;
+  const {data, navigation} = props;
+
   const getPayColor = pay => {
     return pay > 4 ? 'green' : pay > 3 ? 'yellow' : pay > 2 ? 'orange' : 'red';
   };
@@ -19,7 +21,7 @@ const ScrapeTable = props => {
   };
   return (
     <View>
-      {bank.map(hit => {
+      {data.map((hit, index) => {
         const hasRating =
           typeof hit.rating !== 'undefined' &&
           typeof hit.rating.attrs !== 'undefined' &&
@@ -30,7 +32,7 @@ const ScrapeTable = props => {
           size: 20,
         };
         return (
-          <View key={hit.hit_set_id}>
+          <View key={`${hit.hit_set_id}${index}`}>
             <Card
               onPress={() => {
                 navigation.navigate('HitInfo', {hit});
@@ -66,7 +68,7 @@ const ScrapeTable = props => {
                     </Title>
                   </>
                 }
-                right={inProps => (hit.isNew ? null : <Text>New!</Text>)}
+                right={inProps => (hit.isNew ? <Text>New!</Text> : null)}
                 rightStyle={styles.cardRight}
               />
             </Card>
