@@ -5,7 +5,7 @@ const cache = {};
 const getHits = to => {
   const qual = true;
   const masters = false;
-  let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${1}`;
+  let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${0.0}`;
   return new Promise((resolve, reject) => {
     fetch(url, {
       method: 'GET',
@@ -29,7 +29,7 @@ const getHits = to => {
       })
       .catch(getHitsError => {
         console.log(`getHits Error: ${getHitsError}`);
-        reject();
+        reject('getHits');
       });
   });
 };

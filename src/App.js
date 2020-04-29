@@ -49,11 +49,12 @@ export default function App() {
   };
 
   const runScrape = () => {
-    if (!scraping && interval === null) {
-      setInterval(
-        BackgroundTimer.setInterval(async () => {
-          let newHits = [];
-          setScraping(true);
+    setInterval(
+      BackgroundTimer.setTimeout(async () => {
+        console.log(`filter: ${filterState}`);
+        let newHits = [];
+        setScraping(true);
+        try {
           const hits = await getHits(false)
             .then(res => {
               res.forEach(hit => {
@@ -71,22 +72,23 @@ export default function App() {
               }
               return res;
             })
-            .catch(runScrapeError => {
-              console.log(`runScrape Error: ${runScrapeError}`);
+            .catch(getHitsError => {
+              console.log(`getHits Error: ${getHitsError}`);
               if (navigationRef.current.getRootState().index === 0) {
                 error('Error getting data, are you loged in?', 'login').then(
                   () => navigationRef.current.navigate('WebView'),
                 );
               }
             });
-
           console.log(`hits length: ${hits.length}`);
           setScrapeState(hits);
-        }, 1000),
-      );
-    } else {
-      stopScrape();
-    }
+          runScrape();
+        } catch (runScrapeError) {
+          console.log(`runScrape Error: ${runScrapeError}`);
+          stopScrape();
+        }
+      }, 1000),
+    );
   };
   useEffect(() => {
     scrapeRef.current = scrapeState;
@@ -97,7 +99,7 @@ export default function App() {
   }, [newHitsState]);
 
   const stopScrape = () => {
-    BackgroundTimer.clearInterval(interval);
+    BackgroundTimer.clearTimeout(interval);
     setInterval(null);
     setScraping(false);
   };
@@ -110,7 +112,7 @@ export default function App() {
           scrape: {scrapeState, setScrapeState},
         }}>
         <AppBar
-          func={{scraping, interval, runScrape}}
+          func={{scraping, interval, runScrape, stopScrape}}
           navigation={navigationRef}
         />
         <Drawer

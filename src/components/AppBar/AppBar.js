@@ -6,7 +6,7 @@ import {scrapeContext} from '../Context';
 
 const AppBar = props => {
   const {navigation} = props;
-  const {scraping, interval, runScrape} = props.func;
+  const {scraping, interval, runScrape, stopScrape} = props.func;
   const {filter: filterObj} = useContext(scrapeContext);
   const {filterState: filter, setFilterState: setFilter} = filterObj;
   const filterTypes = type => {
@@ -35,7 +35,7 @@ const AppBar = props => {
       <Button
         icon={scraping ? 'stop-circle' : 'flash-circle'}
         mode="contained"
-        onPress={() => runScrape()}
+        onPress={() => (scraping ? stopScrape() : runScrape())}
         disabled={(interval && !scraping) || (!interval && scraping)}>
         {scraping ? 'Stop' : 'Start'}
       </Button>
