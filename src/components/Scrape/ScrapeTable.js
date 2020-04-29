@@ -5,6 +5,7 @@ import {Card, Text, Title, Divider, Subheading} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ScrapeTable = props => {
+  console.log('ScrapeTable Render');
   const {data, navigation} = props;
 
   const getPayColor = pay => {
@@ -19,6 +20,7 @@ const ScrapeTable = props => {
       ? 'arrow-bottom-right'
       : 'arrow-down';
   };
+
   return (
     <View>
       {data.map((hit, index) => {
@@ -32,7 +34,7 @@ const ScrapeTable = props => {
           size: 20,
         };
         return (
-          <View key={`${hit.hit_set_id}${index}`}>
+          <View key={index}>
             <Card
               onPress={() => {
                 navigation.navigate('HitInfo', {hit});
@@ -90,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScrapeTable;
+export default React.memo(ScrapeTable);

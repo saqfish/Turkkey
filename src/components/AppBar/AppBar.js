@@ -1,26 +1,11 @@
-import React, {useContext} from 'react';
-import {Button, Appbar} from 'react-native-paper';
+import React from 'react';
+import {Appbar} from 'react-native-paper';
 
 import {DrawerActions} from '@react-navigation/native';
-import {scrapeContext} from '../Context';
 
 const AppBar = props => {
+  console.log('AppBar Render');
   const {navigation} = props;
-  const {scraping, interval, runScrape, stopScrape} = props.func;
-  const {filter: filterObj} = useContext(scrapeContext);
-  const {filterState: filter, setFilterState: setFilter} = filterObj;
-  const filterTypes = type => {
-    if (type > 3) {
-      type = 0;
-    }
-    const types = {
-      0: 'all',
-      1: 'new',
-      2: 'filter3',
-      3: 'filter4',
-    };
-    return {label: types[type], type};
-  };
 
   return (
     <Appbar.Header>
@@ -32,18 +17,6 @@ const AppBar = props => {
       />
       <Appbar.Content />
       <Appbar.Action />
-      <Button
-        icon={scraping ? 'stop-circle' : 'flash-circle'}
-        mode="contained"
-        onPress={() => (scraping ? stopScrape() : runScrape())}
-        disabled={(interval && !scraping) || (!interval && scraping)}>
-        {scraping ? 'Stop' : 'Start'}
-      </Button>
-      <Button
-        mode="contained"
-        onPress={() => setFilter(filterTypes(filter + 1).type)}>
-        {filterTypes(filter).label}
-      </Button>
     </Appbar.Header>
   );
 };

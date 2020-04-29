@@ -1,3 +1,3 @@
 import {createContext} from 'react';
 
-export const scrapeContext = createContext([]);
+export const snackBarContext = createContext([]);
