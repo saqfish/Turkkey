@@ -22,6 +22,7 @@ const Scrape = props => {
   const newHitsRef = useRef([]);
 
   const {navigation} = props;
+  const {name} = props.route;
 
   const filterTypes = type => {
     if (type > 3) {
@@ -44,12 +45,17 @@ const Scrape = props => {
         try {
           const hits = await getHits(false)
             .then(res => {
-              console.timeEnd('runScrape');
               res.forEach(hit => {
                 hit.isNew = !scrapeRef.current.some(value => {
                   return value.hit_set_id === hit.hit_set_id;
                 });
                 if (hit.isNew) {
+                  let d = new Date();
+                  hit.time = d.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    hour12: true,
+                  });
+
                   newHitsArray.unshift(hit);
                 }
               });
@@ -60,16 +66,28 @@ const Scrape = props => {
                   arr.splice(30, removeUntil);
                 }
                 setNewHits(arr);
+                console.timeEnd('runScrape');
                 return arr;
               }
+              console.timeEnd('runScrape');
               return res;
             })
             .catch(getHitsError => {
-              console.log(`getHits Error: ${getHitsError}`);
-              if (navigation.getRootState().index === 0) {
+              // console.log(`getHits Error: ${getHitsError}`);
+              console.log(getHitsError);
+              const {type, code} = getHitsError;
+              if (name === 'Scrape' && type === 0) {
+                console.log('Logged out error');
+                setScraping(false);
                 /*error('Error getting data, are you loged in?', 'login').then(
                   () => navigation.navigationRef.current.navigate('WebView'),
                 );*/
+              } else {
+                switch (code) {
+                  case 429: // PRE TODO: Magic number
+                    setScraping(false);
+                    break;
+                }
               }
             });
           setScrape(hits);
@@ -82,7 +100,7 @@ const Scrape = props => {
         }
       }, 0),
     );
-  }, [newHitsRef, scraping, filter, scrapeRef, setScrape, navigation]);
+  }, [newHitsRef, scraping, filter, scrapeRef, setScrape, name]);
 
   useEffect(() => {
     if (scraping) {
@@ -93,6 +111,7 @@ const Scrape = props => {
       BackgroundTimer.clearTimeout(interval);
       setInterval(null);
       setScraping(false);
+      setScrape([]);
     }
   }, [runScrape, scraping, interval]);
 
@@ -127,6 +146,7 @@ const Scrape = props => {
         data={scrape}
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
         keyExtractor={(item, index) => `${index}`}
+        initialNumToRender={30}
         // extraData={selected}
       />
     </SafeAreaView>

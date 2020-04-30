@@ -1,35 +1,48 @@
 // const toUrl = "https://turkoption.ucsd.edu/api";
 // const path = "/multi-attrs.php";
+import axios from 'axios';
 const cache = {};
 
 const getHits = to => {
   const qual = true;
   const masters = false;
-  let url = `https://worker.mturk.com/?page_size=20&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${0.0}`;
+  let url = `https://worker.mturk.com/?page_size=30&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${1}`;
   return new Promise((resolve, reject) => {
-    fetch(url, {
-      method: 'GET',
-      credentials: 'same-origin',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
+    axios
+      .get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      })
+      .then(response => {
+        if (
+          response.request &&
+          response.request.responseURL.includes(
+            'https://www.amazon.com/ap/signin',
+          )
+        ) {
+          reject({type: 0, code: null}); // type 0 = logged out, TODO: Magic number
+        }
+        let res = response.data;
+        if (to) {
+          getTO(res.results)
+            .then(hits => resolve(res.results))
+            .catch(() => resolve(res.results));
         } else {
-          throw Error();
+          resolve(res.results);
         }
       })
-      .then(res => {
-        getTO(res.results)
-          .then(hits => resolve(res.results))
-          .catch(() => resolve(res.results));
-      })
       .catch(getHitsError => {
-        console.log(`getHits Error: ${getHitsError}`);
-        reject('getHits');
+        if (getHitsError.response) {
+          console.log(getHitsError.response);
+          reject({type: 1, code: getHitsError.response.status}); // type 1 = Pre error , TODO: Magic number
+        } else if (getHitsError.request) {
+          reject({type: 2, code: null}); // type 1 = , TODO: Magic number
+        } else {
+          console.log(getHitsError);
+          reject({type: 9, code: null}); // type 1 = unknown, TODO: Magic number
+        }
       });
   });
 };
@@ -49,9 +62,15 @@ const getTO = hits => {
   const url = `https://turkopticon.ucsd.edu/api/multi-attrs.php?ids=${ids.toString()}`;
   return new Promise((resolve, reject) => {
     if (ids.length > 0) {
-      fetch(url)
-        .then(res => res.json())
-        .then(res => {
+      axios
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        })
+        .then(response => {
+          let res = response.data;
           hits.forEach(hit => {
             hit.rating = res[hit.requester_id];
             cache[hit.requester_id] = res[hit.requester_id];
