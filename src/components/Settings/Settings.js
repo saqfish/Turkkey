@@ -28,10 +28,10 @@ const Settings = props => {
               style={styles.slider}
               step={reward < 3 ? 0.01 : 0.1}
               minimumValue={0}
-              maximumValue={reward < 3 ? 6 : 100}
+              maximumValue={reward < 6 ? 6 : 100}
               value={reward}
               onValueChange={onRewardChange}
-              thumbTintColor={theme.colors.text}
+              thumbTintColor={reward > 6 ? 'red' : 'green'}
               minimumTrackTintColor={theme.colors.text}
               maximumTrackTintColor={theme.colors.text}
             />
