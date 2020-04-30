@@ -10,14 +10,16 @@ import Hit from './Hit';
 
 import {Button} from 'react-native-paper';
 
+let interval = null;
 const Scrape = props => {
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
+  let isMounted = true;
 
   const [filter, setFilter] = useState(0);
-  const [interval, setInterval] = useState(null);
 
+  const init = useRef(true);
   const scrapeRef = useRef([]);
   const newHitsRef = useRef([]);
 
@@ -39,102 +41,126 @@ const Scrape = props => {
 
   const runScrape = useCallback(() => {
     console.time('runScrape');
-    setInterval(
-      BackgroundTimer.setTimeout(async () => {
-        let newHitsArray = [];
-        try {
-          const hits = await getHits(false)
-            .then(res => {
-              res.forEach(hit => {
-                hit.isNew = !scrapeRef.current.some(value => {
-                  return value.hit_set_id === hit.hit_set_id;
-                });
-                if (hit.isNew) {
-                  let d = new Date();
-                  hit.time = d.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    hour12: true,
-                  });
-
-                  newHitsArray.unshift(hit);
-                }
+    interval = BackgroundTimer.setTimeout(async () => {
+      console.log(`runScrape: ${scraping} - Interval: ${interval}`);
+      let newHitsArray = [];
+      try {
+        const hits = await getHits(false)
+          .then(res => {
+            res.forEach(hit => {
+              hit.isNew = !scrapeRef.current.some(value => {
+                return value.hit_set_id === hit.hit_set_id;
               });
-              if (filter === 1) {
-                let arr = [...newHitsArray, ...newHitsRef.current];
-                if (arr.length > 30) {
-                  let removeUntil = arr.length - 30;
-                  arr.splice(30, removeUntil);
-                }
-                setNewHits(arr);
-                console.timeEnd('runScrape');
-                return arr;
-              }
-              console.timeEnd('runScrape');
-              return res;
-            })
-            .catch(getHitsError => {
-              // console.log(`getHits Error: ${getHitsError}`);
-              console.log(getHitsError);
-              const {type, code} = getHitsError;
-              if (name === 'Scrape' && type === 0) {
-                console.log('Logged out error');
-                setScraping(false);
-                /*error('Error getting data, are you loged in?', 'login').then(
-                  () => navigation.navigationRef.current.navigate('WebView'),
-                );*/
-              } else {
-                switch (code) {
-                  case 429: // PRE TODO: Magic number
-                    setScraping(false);
-                    break;
-                }
+              if (hit.isNew) {
+                let d = new Date();
+                hit.time = d.toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  hour12: true,
+                });
+
+                newHitsArray.unshift(hit);
               }
             });
-          setScrape(hits);
-          if (scraping) {
+            if (filter === 1) {
+              let arr = [...newHitsArray, ...newHitsRef.current];
+              if (arr.length > 30) {
+                let removeUntil = arr.length - 30;
+                arr.splice(30, removeUntil);
+              }
+              setNewHits(arr);
+              console.timeEnd('runScrape');
+              return arr;
+            }
+            console.timeEnd('runScrape');
+            return res;
+          })
+          .catch(getHitsError => {
+            console.log('getHits Error: ');
+            console.log(getHitsError);
+            const {type, code} = getHitsError;
+            if (name === 'Scrape' && type === 0) {
+              console.log('Logged out error');
+              // setScraping(false);
+              /*error('Error getting data, are you loged in?', 'login').then(
+                  () => navigation.navigationRef.current.navigate('WebView'),
+                );*/
+            } else {
+              switch (code) {
+                case 429: // PRE TODO: Magic number
+                  setScrape(scrapeRef.current);
+                  setScraping(false);
+                  break;
+              }
+            }
+            setScrape(scrapeRef.current);
+          });
+        setScrape(hits);
+        if (scraping && interval != null) {
+          if (isMounted) {
             runScrape();
           }
-        } catch (runScrapeError) {
-          console.log(`runScrape Error: ${runScrapeError}`);
-          setScrape(false);
         }
-      }, 0),
-    );
-  }, [newHitsRef, scraping, filter, scrapeRef, setScrape, name]);
-
-  useEffect(() => {
-    if (scraping) {
-      if (interval === null) {
-        runScrape();
+      } catch (runScrapeError) {
+        setScrape(scrapeRef.current);
+        console.log(`runScrape Error: ${runScrapeError}`);
+        setScraping(false);
       }
-    } else {
-      BackgroundTimer.clearTimeout(interval);
-      setInterval(null);
-      setScraping(false);
-      setScrape([]);
-    }
-  }, [runScrape, scraping, interval]);
+    }, 1000);
+  }, [newHitsRef, scraping, scrapeRef, setScrape, interval, filter, name]);
 
   useEffect(() => {
-    scrapeRef.current = scrape;
+    if (init.current) {
+      init.current = false;
+    } else {
+      if (scraping) {
+        console.log('Scrape: starting');
+        runScrape();
+      } else {
+        console.log(`Scrape: stoping interval ${interval}`);
+        BackgroundTimer.clearTimeout(interval);
+        interval = null;
+        // setScrape([]);
+      }
+    }
+  }, [scraping]);
+
+  useEffect(() => {
+    if (typeof scrape !== 'undefined') {
+      scrapeRef.current = scrape;
+    }
   }, [scrape]);
 
   useEffect(() => {
-    newHitsRef.current = newHits;
+    if (typeof newHits !== 'undefined') {
+      newHitsRef.current = newHits;
+    }
   }, [newHits]);
 
-  /* useEffect(() => {
-    return BackgroundTimer.clearTimeout(interval);
-  }); */
+  useEffect(() => {
+    return () => {
+      setScraping(false);
+      BackgroundTimer.clearTimeout(interval);
+      interval = null;
+      isMounted = false;
+    };
+  }, []);
 
+  const startScrape = () => {
+    if (!scraping && interval === null) {
+      setScraping(true);
+    }
+  };
+  const stopScrape = () => {
+    setScraping(false);
+  };
+  // disabled={(interval && !scraping) || (!interval && scraping)}>
   return (
     <SafeAreaView style={styles.container}>
       <AppBar navigation={navigation} />
       <Button
         icon={scraping ? 'stop-circle' : 'flash-circle'}
         mode="contained"
-        onPress={() => (scraping ? setScraping(false) : setScraping(true))}
-        disabled={(interval && !scraping) || (!interval && scraping)}>
+        onPress={() => (scraping ? stopScrape() : startScrape())}>
         {scraping ? 'Stop' : 'Start'}
       </Button>
       <Button
