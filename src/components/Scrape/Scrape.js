@@ -1,26 +1,25 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {StyleSheet, SafeAreaView, ScrollView} from 'react-native';
+import 'react-native-console-time-polyfill';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
+import {FlatList, StyleSheet, SafeAreaView} from 'react-native';
+import AppBar from './../AppBar/AppBar.js';
+
 import BackgroundTimer from 'react-native-background-timer';
 import {getHits} from '../../utils';
 
-import ScrapeTable from './ScrapeTable';
+import Hit from './Hit';
 
 import {Button} from 'react-native-paper';
 
-import {useIsDrawerOpen} from '@react-navigation/drawer';
-
 const Scrape = props => {
-  console.log('Scrape Render');
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
-  const isDrawerOpen = useIsDrawerOpen();
 
   const [filter, setFilter] = useState(0);
   const [interval, setInterval] = useState(null);
 
-  const scrapeRef = useRef(null);
-  const newHitsRef = useRef(null);
+  const scrapeRef = useRef([]);
+  const newHitsRef = useRef([]);
 
   const {navigation} = props;
 
@@ -37,25 +36,29 @@ const Scrape = props => {
     return {label: types[type], type};
   };
 
-  const runScrape = () => {
+  const runScrape = useCallback(() => {
+    console.time('runScrape');
     setInterval(
       BackgroundTimer.setTimeout(async () => {
-        console.log(`isDrawerOpen: ${isDrawerOpen}`);
         let newHitsArray = [];
-        setScraping(true);
         try {
           const hits = await getHits(false)
             .then(res => {
+              console.timeEnd('runScrape');
               res.forEach(hit => {
                 hit.isNew = !scrapeRef.current.some(value => {
                   return value.hit_set_id === hit.hit_set_id;
                 });
                 if (hit.isNew) {
-                  newHitsArray.push(hit);
+                  newHitsArray.unshift(hit);
                 }
               });
               if (filter === 1) {
-                let arr = [...newHitsRef.current, ...newHitsArray];
+                let arr = [...newHitsArray, ...newHitsRef.current];
+                if (arr.length > 30) {
+                  let removeUntil = arr.length - 30;
+                  arr.splice(30, removeUntil);
+                }
                 setNewHits(arr);
                 return arr;
               }
@@ -69,16 +72,30 @@ const Scrape = props => {
                 );*/
               }
             });
-          console.log(`hits length: ${hits.length}`);
           setScrape(hits);
-          runScrape();
+          if (scraping) {
+            runScrape();
+          }
         } catch (runScrapeError) {
           console.log(`runScrape Error: ${runScrapeError}`);
-          stopScrape();
+          setScrape(false);
         }
-      }, 1000),
+      }, 0),
     );
-  };
+  }, [newHitsRef, scraping, filter, scrapeRef, setScrape, navigation]);
+
+  useEffect(() => {
+    if (scraping) {
+      if (interval === null) {
+        runScrape();
+      }
+    } else {
+      BackgroundTimer.clearTimeout(interval);
+      setInterval(null);
+      setScraping(false);
+    }
+  }, [runScrape, scraping, interval]);
+
   useEffect(() => {
     scrapeRef.current = scrape;
   }, [scrape]);
@@ -91,18 +108,13 @@ const Scrape = props => {
     return BackgroundTimer.clearTimeout(interval);
   }); */
 
-  const stopScrape = () => {
-    BackgroundTimer.clearTimeout(interval);
-    setInterval(null);
-    setScraping(false);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
+      <AppBar navigation={navigation} />
       <Button
         icon={scraping ? 'stop-circle' : 'flash-circle'}
         mode="contained"
-        onPress={() => (scraping ? stopScrape() : runScrape())}
+        onPress={() => (scraping ? setScraping(false) : setScraping(true))}
         disabled={(interval && !scraping) || (!interval && scraping)}>
         {scraping ? 'Stop' : 'Start'}
       </Button>
@@ -111,15 +123,15 @@ const Scrape = props => {
         onPress={() => setFilter(filterTypes(filter + 1).type)}>
         {filterTypes(filter).label}
       </Button>
-      <ScrollView style={styles.scrollView}>
-        {typeof scrape === 'undefined' || scrape.length < 1 ? null : (
-          <ScrapeTable navigation={props.navigation} data={scrape} />
-        )}
-      </ScrollView>
+      <FlatList
+        data={scrape}
+        renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
+        keyExtractor={(item, index) => `${index}`}
+        // extraData={selected}
+      />
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
