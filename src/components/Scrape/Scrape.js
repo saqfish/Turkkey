@@ -153,13 +153,14 @@ const Scrape = props => {
   const stopScrape = () => {
     setScraping(false);
   };
-  // disabled={(interval && !scraping) || (!interval && scraping)}>
   return (
     <SafeAreaView style={styles.container}>
       <AppBar navigation={navigation} />
       <Button
         icon={scraping ? 'stop-circle' : 'flash-circle'}
         mode="contained"
+        disabled={!interval && scraping}
+        loading={!interval && scraping}
         onPress={() => (scraping ? stopScrape() : startScrape())}>
         {scraping ? 'Stop' : 'Start'}
       </Button>
