@@ -14,7 +14,6 @@ import DrawerContent from './DrawerContent';
 const DrawerNav = createDrawerNavigator();
 
 const Drawer = props => {
-  console.log('Drawer Render');
   const {navigation, theme, darkness} = props;
   const {dark, setDark} = darkness;
 
