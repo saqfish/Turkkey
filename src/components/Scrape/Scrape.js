@@ -1,5 +1,5 @@
 import 'react-native-console-time-polyfill';
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {FlatList, StyleSheet, SafeAreaView} from 'react-native';
 import AppBar from './../AppBar/AppBar.js';
 
@@ -39,7 +39,7 @@ const Scrape = props => {
     return {label: types[type], type};
   };
 
-  const runScrape = useCallback(() => {
+  const runScrape = async () => {
     console.time('runScrape');
     interval = BackgroundTimer.setTimeout(async () => {
       console.log(`runScrape: ${scraping} - Interval: ${interval}`);
@@ -106,7 +106,7 @@ const Scrape = props => {
         setScraping(false);
       }
     }, 1000);
-  }, [newHitsRef, scraping, scrapeRef, setScrape, interval, filter, name]);
+  };
 
   useEffect(() => {
     if (init.current) {
