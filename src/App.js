@@ -4,7 +4,6 @@ import {Provider as PaperProvider} from 'react-native-paper';
 
 import {darkTheme, lightTheme} from './styles';
 
-import AppBar from './components/AppBar/AppBar.js';
 import ErrorBar from './components/ErrorBar';
 import Drawer from './components/Drawer/Drawer';
 
@@ -39,7 +38,6 @@ export default function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <AppBar navigation={navigationRef} />
       <Drawer
         theme={theme}
         navigation={navigationRef}

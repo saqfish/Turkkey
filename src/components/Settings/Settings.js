@@ -1,14 +1,22 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Caption} from 'react-native-paper';
+import AppBar from './../AppBar/AppBar.js';
 
-const Settings = () => {
-  console.log('settings-tick');
+const Settings = props => {
+  console.log('Settings Render');
+  const {navigation} = props;
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.settingsView}>
+      <AppBar navigation={navigation} />
       <Caption>Settings</Caption>
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  settintsView: {
+    flex: 1,
+  },
+});
 export default Settings;
