@@ -3,10 +3,10 @@
 import axios from 'axios';
 const cache = {};
 
-const getHits = to => {
-  const qual = true;
-  const masters = false;
-  let url = `https://worker.mturk.com/?page_size=30&filters%5Bqualified%5D=${qual}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${1}`;
+const getHits = values => {
+  const {reward, qualified, masters, to} = values;
+
+  let url = `https://worker.mturk.com/?page_size=30&filters%5Bqualified%5D=${qualified}&filters%5Bmasters%5D=${masters}&sort=updated_desc&filters%5Bmin_reward%5D=${reward}`;
   return new Promise((resolve, reject) => {
     axios
       .get(url, {

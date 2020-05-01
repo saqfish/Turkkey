@@ -1,20 +1,31 @@
 import 'react-native-console-time-polyfill';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {FlatList, StyleSheet, SafeAreaView} from 'react-native';
+import {Button} from 'react-native-paper';
 import AppBar from './../AppBar/AppBar.js';
 
 import BackgroundTimer from 'react-native-background-timer';
 import {getHits} from '../../utils';
 
-import Hit from './Hit';
+import {scrapeContext} from '../Context';
 
-import {Button} from 'react-native-paper';
+import Hit from './Hit';
 
 let interval = null;
 const Scrape = props => {
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
+
+  const context = useContext(scrapeContext);
+  const {scrape: scrapeValues, settings} = context;
+
+  const {reward} = scrapeValues.reward;
+  const {rate} = scrapeValues.rate;
+  const {qualified} = scrapeValues.qualified;
+  const {masters} = scrapeValues.masters;
+  const {to} = settings.to;
+
   let isMounted = true;
 
   const [filter, setFilter] = useState(0);
@@ -42,10 +53,10 @@ const Scrape = props => {
   const runScrape = async () => {
     console.time('runScrape');
     interval = BackgroundTimer.setTimeout(async () => {
-      console.log(`runScrape: ${scraping} - Interval: ${interval}`);
+      console.log(`runScrape: $${reward} at ${rate}s - Interval: ${interval}`);
       let newHitsArray = [];
       try {
-        const hits = await getHits(false)
+        const hits = await getHits({reward, qualified, masters, to})
           .then(res => {
             res.forEach(hit => {
               hit.isNew = !scrapeRef.current.some(value => {
@@ -105,7 +116,7 @@ const Scrape = props => {
         console.log(`runScrape Error: ${runScrapeError}`);
         setScraping(false);
       }
-    }, 1000);
+    }, rate * 60000);
   };
 
   useEffect(() => {
