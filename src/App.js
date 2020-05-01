@@ -7,6 +7,8 @@ import {darkTheme, lightTheme} from './styles';
 import ErrorBar from './components/ErrorBar';
 import Drawer from './components/Drawer/Drawer';
 
+import {snackBarContext} from './components/Context';
+
 export default function App() {
   console.log('App Render');
 
@@ -38,20 +40,22 @@ export default function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <Drawer
-        theme={theme}
-        navigation={navigationRef}
-        darkness={{dark, setDark}}
-        snackbar={error}
-      />
-      {snackBarState.errorBar && (
-        <ErrorBar
-          {...snackBarState.errorBar}
-          visible={snackBarState.errorBar.visible}
-          action={snackBarState.errorBar.action}
-          onDismiss={handleErrorBarClose}
+      <snackBarContext.Provider value={error}>
+        <Drawer
+          theme={theme}
+          navigation={navigationRef}
+          darkness={{dark, setDark}}
+          snackbar={error}
         />
-      )}
+        {snackBarState.errorBar && (
+          <ErrorBar
+            {...snackBarState.errorBar}
+            visible={snackBarState.errorBar.visible}
+            action={snackBarState.errorBar.action}
+            onDismiss={handleErrorBarClose}
+          />
+        )}
+      </snackBarContext.Provider>
     </PaperProvider>
   );
 }

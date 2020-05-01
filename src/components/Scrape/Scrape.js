@@ -8,6 +8,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import {getHits} from '../../utils';
 
 import {scrapeContext} from '../Context';
+import {snackBarContext} from '../Context';
 
 import Hit from './Hit';
 
@@ -16,6 +17,9 @@ const Scrape = props => {
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
+
+  const snackBar = useContext(snackBarContext);
+  const error = snackBar;
 
   const context = useContext(scrapeContext);
   const {scrape: scrapeValues, settings} = context;
@@ -73,6 +77,7 @@ const Scrape = props => {
               }
             });
             if (filter === 1) {
+              // TODO: Magic number
               let arr = [...newHitsArray, ...newHitsRef.current];
               if (arr.length > 30) {
                 let removeUntil = arr.length - 30;
@@ -91,10 +96,10 @@ const Scrape = props => {
             const {type, code} = getHitsError;
             if (name === 'Scrape' && type === 0) {
               console.log('Logged out error');
-              // setScraping(false);
-              /*error('Error getting data, are you loged in?', 'login').then(
-                  () => navigation.navigationRef.current.navigate('WebView'),
-                );*/
+              setScraping(false);
+              error('Error getting data, are you loged in?', 'login').then(() =>
+                navigation.navigationRef.current.navigate('WebView'),
+              );
             } else {
               switch (code) {
                 case 429: // PRE TODO: Magic number
@@ -164,6 +169,7 @@ const Scrape = props => {
   const stopScrape = () => {
     setScraping(false);
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <AppBar navigation={navigation} />
