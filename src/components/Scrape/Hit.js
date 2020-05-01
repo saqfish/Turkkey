@@ -50,14 +50,10 @@ const Hit = React.memo(props => {
         title={
           <>
             <Title>
-              {hasRating ? (
-                <Text>
-                  <Icon {...ratingProp} />
-                  {hit.requester_name}
-                </Text>
-              ) : (
-                hit.requester_name
-              )}
+              <Text>
+                <Icon {...ratingProp} />
+                {hit.requester_name}
+              </Text>
             </Title>
           </>
         }

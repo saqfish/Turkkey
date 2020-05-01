@@ -1,6 +1,6 @@
 import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import {FlatList, StyleSheet, SafeAreaView} from 'react-native';
+import {FlatList, StyleSheet, SafeAreaView, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import AppBar from './../AppBar/AppBar.js';
 
@@ -167,19 +167,21 @@ const Scrape = props => {
   return (
     <SafeAreaView style={styles.container}>
       <AppBar navigation={navigation} />
-      <Button
-        icon={scraping ? 'stop-circle' : 'flash-circle'}
-        mode="contained"
-        disabled={!interval && scraping}
-        loading={!interval && scraping}
-        onPress={() => (scraping ? stopScrape() : startScrape())}>
-        {scraping ? 'Stop' : 'Start'}
-      </Button>
-      <Button
-        mode="contained"
-        onPress={() => setFilter(filterTypes(filter + 1).type)}>
-        {filterTypes(filter).label}
-      </Button>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => setFilter(filterTypes(filter + 1).type)}>
+          {filterTypes(filter).label}
+        </Button>
+        <Button
+          icon={scraping ? 'stop-circle' : 'flash-circle'}
+          mode="contained"
+          disabled={!interval && scraping}
+          loading={!interval && scraping}
+          onPress={() => (scraping ? stopScrape() : startScrape())}>
+          {scraping ? 'Stop' : 'Start'}
+        </Button>
+      </View>
       <FlatList
         data={scrape}
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
@@ -196,6 +198,11 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   scrollView: {},
+  buttons: {
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
 });
 
 export default Scrape;
