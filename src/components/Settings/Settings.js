@@ -1,29 +1,34 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import AppBar from './../AppBar/AppBar.js';
 import Slider from '@react-native-community/slider';
 import {Divider, List, Switch, Text, withTheme} from 'react-native-paper';
 
+import {scrapeContext} from '../Context';
+
 const Settings = props => {
   const {navigation} = props;
   const {theme} = props;
 
-  const [reward, setReward] = useState(0);
+  const context = useContext(scrapeContext);
+  const {settings, scrape} = context;
+
+  const {reward, setReward} = scrape.reward;
   const onRewardChange = value => {
     let newValue = parseFloat(value.toFixed(4));
     setReward(newValue);
   };
 
-  const [rate, setRate] = useState(0);
+  const {rate, setRate} = scrape.rate;
   const onRateChange = value => {
     let newValue = parseFloat(value.toFixed(4));
     setRate(newValue);
   };
 
-  const [qualified, setQualified] = useState(0);
+  const {qualified, setQualified} = scrape.qualified;
   const onQualifiedChange = value => setQualified(value);
 
-  const [masters, setMasters] = useState(0);
+  const {masters, setMasters} = scrape.masters;
   const onMastersChange = value => setMasters(value);
 
   const styles = StyleSheet.create({
@@ -33,6 +38,16 @@ const Settings = props => {
     slider: {width: 200, height: 40},
     switch: {color: theme.colors.text},
   });
+
+  const {dark, setDark} = settings.dark;
+  const onDarkChange = value => setDark(value);
+
+  const {to, setTO} = settings.to;
+  const onTOChange = value => setTO(value);
+
+  const {pre, setPRE} = settings.pre;
+  const onPREChange = value => setPRE(value);
+
   return (
     <View style={styles.settingsView}>
       <AppBar navigation={navigation} />
@@ -111,8 +126,8 @@ const Settings = props => {
             return (
               <Switch
                 color={styles.switch.color}
-                value={qualified}
-                onValueChange={onQualifiedChange}
+                value={dark}
+                onValueChange={onDarkChange}
               />
             );
           }}
@@ -127,8 +142,8 @@ const Settings = props => {
             return (
               <Switch
                 color={styles.switch.color}
-                value={qualified}
-                onValueChange={onQualifiedChange}
+                value={pre}
+                onValueChange={onPREChange}
               />
             );
           }}
@@ -145,8 +160,8 @@ const Settings = props => {
             return (
               <Switch
                 color={styles.switch.color}
-                value={qualified}
-                onValueChange={onQualifiedChange}
+                value={to}
+                onValueChange={onTOChange}
               />
             );
           }}
