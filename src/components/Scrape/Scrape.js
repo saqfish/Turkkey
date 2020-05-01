@@ -138,7 +138,7 @@ const Scrape = props => {
         // setScrape([]);
       }
     }
-  }, [scraping]);
+  }, [scraping]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (typeof scrape !== 'undefined') {
@@ -157,7 +157,7 @@ const Scrape = props => {
       setScraping(false);
       BackgroundTimer.clearTimeout(interval);
       interval = null;
-      isMounted = false;
+      isMounted = false; // eslint-disable-line react-hooks/exhaustive-deps
     };
   }, []);
 
@@ -193,7 +193,8 @@ const Scrape = props => {
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
         keyExtractor={(item, index) => `${index}`}
         initialNumToRender={30}
-        // extraData={selected}
+        onRefresh={() => startScrape()}
+        refreshing={false}
       />
     </SafeAreaView>
   );
