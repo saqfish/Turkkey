@@ -121,7 +121,7 @@ const Scrape = props => {
         console.log(`runScrape Error: ${runScrapeError}`);
         setScraping(false);
       }
-    }, rate * 60000);
+    }, rate * 1000);
   };
 
   useEffect(() => {

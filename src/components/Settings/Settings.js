@@ -71,12 +71,12 @@ const Settings = props => {
           )}
         />
         <List.Item
-          title={<Text>{rate}</Text>}
+          title={<Text>{`${rate} seconds`}</Text>}
           description="Delay between scrapes"
           right={() => (
             <Slider
               style={styles.slider}
-              step={0.01}
+              step={0.1}
               minimumValue={0}
               maximumValue={5}
               value={rate}
