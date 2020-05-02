@@ -193,7 +193,7 @@ const Scrape = props => {
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
         keyExtractor={(item, index) => `${index}`}
         initialNumToRender={30}
-        onRefresh={() => startScrape()}
+        onRefresh={() => (scraping ? stopScrape() : startScrape())}
         refreshing={false}
       />
     </SafeAreaView>
