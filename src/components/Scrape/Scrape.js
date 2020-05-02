@@ -24,8 +24,8 @@ const Scrape = props => {
   const context = useContext(scrapeContext);
   const {scrapeValues, settingsValues} = context;
 
-  const {reward, rate, qualified, masters} = scrapeValues;
-  const {to} = settingsValues;
+  const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
+  const {to} = settingsValues.settingsValues;
 
   let isMounted = true;
 
@@ -95,7 +95,7 @@ const Scrape = props => {
               console.log('Logged out error');
               setScraping(false);
               error('Error getting data, are you loged in?', 'login').then(() =>
-                navigation.navigationRef.current.navigate('WebView'),
+                navigation.navigate('WebView'),
               );
             } else {
               switch (code) {
