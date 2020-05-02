@@ -15,10 +15,7 @@ export default function App() {
 
   const initialValuesLoaded = useRef(false);
 
-  const [dark, setDark] = useState(true);
   const navigationRef = useRef(null);
-
-  const theme = dark ? darkTheme : lightTheme;
 
   const [snackBarState, setSnackBarState] = useState({errorBar: null});
 
@@ -91,13 +88,15 @@ export default function App() {
     }
   };
 
+  const {dark} = settingsValues || false;
+  const theme = dark ? darkTheme : lightTheme;
+
   return (
     <PaperProvider theme={theme}>
       <snackBarContext.Provider value={error}>
         <Drawer
           theme={theme}
           navigation={navigationRef}
-          darkness={{dark, setDark}}
           snackbar={error}
           settings={{settingsValues, setSettingsValues}}
           scrape={{scrapeValues, setScrapeValues}}

@@ -16,8 +16,7 @@ import DrawerContent from './DrawerContent';
 const DrawerNav = createDrawerNavigator();
 
 const Drawer = props => {
-  const {scrape, settings, navigation, theme, darkness} = props;
-  const {dark, setDark} = darkness;
+  const {scrape, settings, navigation, theme} = props;
 
   const {settingsValues, setSettingsValues} = settings;
   const {scrapeValues, setScrapeValues} = scrape;
@@ -38,9 +37,7 @@ const Drawer = props => {
             activeTintColor: theme.colors.text,
             // backgroundColor: theme.colors.primary,
           }}
-          drawerContent={inProps => (
-            <DrawerContent {...inProps} darkness={{dark, setDark}} />
-          )}>
+          drawerContent={inProps => <DrawerContent {...inProps} />}>
           <DrawerNav.Screen
             options={{
               drawerIcon: () => (

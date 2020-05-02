@@ -15,7 +15,6 @@ import {
 
 const DrawerContent = props => {
   const theme = useTheme();
-  const {dark, setDark} = props.darkness;
   const filterdProps = {
     ...props,
     state: {
@@ -26,9 +25,7 @@ const DrawerContent = props => {
 
   const styles = StyleSheet.create({
     headerContainer: {
-      // backgroundColor: theme.colors.primary,
       height: 80,
-      // alignItems: 'center',
       padding: 12,
       justifyContent: 'center',
     },
@@ -49,15 +46,11 @@ const DrawerContent = props => {
         <View style={{}}>
           <DrawerItem
             icon={() => (
-              <Icon
-                name={`brightness-${!dark ? '5' : '4'}`}
-                color={theme.colors.text}
-                size={24}
-              />
+              <Icon name="help" color={theme.colors.text} size={24} />
             )}
             labelStyle={{color: theme.colors.text}}
-            label={`${!dark ? 'Light' : 'Dark'} mode`}
-            onPress={() => setDark(!dark)}
+            label="Help"
+            onPress={() => {}}
           />
         </View>
       </View>
