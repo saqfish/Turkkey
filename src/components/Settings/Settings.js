@@ -11,25 +11,37 @@ const Settings = props => {
   const {theme} = props;
 
   const context = useContext(scrapeContext);
-  const {settings, scrape} = context;
+  const {scrapeValues, settingsValues} = context;
 
-  const {reward, setReward} = scrape.reward;
+  const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
+  const {setScrapeValues} = scrapeValues;
+
   const onRewardChange = value => {
     let newValue = parseFloat(value.toFixed(4));
-    setReward(newValue);
+    setScrapeValues(prev => ({...prev, reward: newValue}));
   };
 
-  const {rate, setRate} = scrape.rate;
   const onRateChange = value => {
     let newValue = parseFloat(value.toFixed(4));
-    setRate(newValue);
+    setScrapeValues(prev => ({...prev, rate: newValue}));
   };
 
-  const {qualified, setQualified} = scrape.qualified;
-  const onQualifiedChange = value => setQualified(value);
+  const onQualifiedChange = value =>
+    setScrapeValues(prev => ({...prev, qualified: value}));
 
-  const {masters, setMasters} = scrape.masters;
-  const onMastersChange = value => setMasters(value);
+  const onMastersChange = value =>
+    setScrapeValues(prev => ({...prev, masters: value}));
+
+  const {dark, pre, to} = settingsValues.settingsValues;
+  const {setSettingsValues} = settingsValues;
+
+  const onDarkChange = value =>
+    setSettingsValues(prev => ({...prev, dark: value}));
+
+  const onTOChange = value => setSettingsValues(prev => ({...prev, to: value}));
+
+  const onPREChange = value =>
+    setSettingsValues(prev => ({...prev, pre: value}));
 
   const styles = StyleSheet.create({
     settintsView: {
@@ -38,15 +50,6 @@ const Settings = props => {
     slider: {width: 200, height: 40},
     switch: {color: theme.colors.text},
   });
-
-  const {dark, setDark} = settings.dark;
-  const onDarkChange = value => setDark(value);
-
-  const {to, setTO} = settings.to;
-  const onTOChange = value => setTO(value);
-
-  const {pre, setPRE} = settings.pre;
-  const onPREChange = value => setPRE(value);
 
   return (
     <View style={styles.settingsView}>

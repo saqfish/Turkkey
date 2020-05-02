@@ -22,13 +22,10 @@ const Scrape = props => {
   const error = snackBar;
 
   const context = useContext(scrapeContext);
-  const {scrape: scrapeValues, settings} = context;
+  const {scrapeValues, settingsValues} = context;
 
-  const {reward} = scrapeValues.reward;
-  const {rate} = scrapeValues.rate;
-  const {qualified} = scrapeValues.qualified;
-  const {masters} = scrapeValues.masters;
-  const {to} = settings.to;
+  const {reward, rate, qualified, masters} = scrapeValues;
+  const {to} = settingsValues;
 
   let isMounted = true;
 
