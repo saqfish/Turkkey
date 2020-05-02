@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
+import {AsyncStorage} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 
@@ -19,13 +20,59 @@ const Drawer = props => {
   const {navigation, theme, darkness} = props;
   const {dark, setDark} = darkness;
   const [pre, setPRE] = useState(false);
-  const [to, setTO] = useState(false);
+  const [to, setTO] = useState(true);
 
   const [reward, setReward] = useState(0);
   const [rate, setRate] = useState(0);
   const [qualified, setQualified] = useState(true);
   const [masters, setMasters] = useState(false);
 
+  const init = useRef(true);
+
+  useEffect(() => {
+    if (init.current) {
+      init.current = false;
+    } else {
+      console.log('values changed');
+      storeValues();
+    }
+  }, [rate, reward, qualified, masters, dark, pre, to]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    getValues();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const storeValues = async () => {
+    try {
+      const scrapeValues = {rate, reward, qualified, masters};
+      const settingsValues = {dark, pre, to};
+      await AsyncStorage.setItem('scrapeValues', JSON.stringify(scrapeValues));
+      await AsyncStorage.setItem(
+        'settingsValues',
+        JSON.stringify(settingsValues),
+      );
+    } catch (error) {}
+  };
+
+  const getValues = async () => {
+    try {
+      const scrapeValues = await AsyncStorage.getItem('scrapeValues');
+      const settingsValues = await AsyncStorage.getItem('settingsValues');
+      if (scrapeValues !== null) {
+        const values = JSON.parse(scrapeValues);
+        setRate(values.rate);
+        setReward(values.reward);
+        setQualified(values.qualified);
+        setMasters(values.masters);
+      }
+      if (scrapeValues !== null) {
+        const values = JSON.parse(settingsValues);
+        setDark(values.dark);
+        setPRE(values.pre);
+        setTO(values.to);
+      }
+    } catch (error) {}
+  };
   return (
     <scrapeContext.Provider
       value={{
