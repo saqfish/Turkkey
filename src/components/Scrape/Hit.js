@@ -57,7 +57,7 @@ const Hit = React.memo(props => {
             </Title>
           </>
         }
-        right={inProps => (hit.isNew ? <Text>{hit.time}</Text> : null)}
+        right={inProps => <Text>{hit.time}</Text>}
         rightStyle={styles.cardRight}
       />
     </Card>

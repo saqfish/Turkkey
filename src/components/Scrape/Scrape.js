@@ -69,11 +69,11 @@ const Scrape = props => {
                   return value.hit_set_id === hit.hit_set_id;
                 });
                 if (hit.isNew) {
-                  hit.time = moment()
-                    .format('hh:mm a')
-                    .toString();
                   newHitsArray.unshift(hit);
                 }
+                hit.time = moment()
+                  .format('hh:mm a')
+                  .toString();
               });
               if (filter === 1) {
                 // TODO: Magic number
