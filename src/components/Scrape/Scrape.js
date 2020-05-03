@@ -2,7 +2,7 @@ import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {FlatList, StyleSheet, SafeAreaView, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import AppBar from './../AppBar/AppBar.js';
+import AppBar from './ScrapeAppBar.js';
 
 import BackgroundTimer from 'react-native-background-timer';
 import {getHits} from '../../utils';
