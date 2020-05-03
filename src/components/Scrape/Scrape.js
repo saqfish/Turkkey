@@ -53,72 +53,77 @@ const Scrape = props => {
 
   const runScrape = async () => {
     console.time('runScrape');
-    interval = BackgroundTimer.setTimeout(async () => {
-      console.log(`runScrape: $${reward} at ${rate}s - Interval: ${interval}`);
-      let newHitsArray = [];
-      try {
-        const hits = await getHits({reward, qualified, masters, to})
-          .then(res => {
-            res.forEach(hit => {
-              hit.isNew = !scrapeRef.current.some(value => {
-                return value.hit_set_id === hit.hit_set_id;
-              });
-              if (hit.isNew) {
-                let d = new Date();
-                hit.time = d.toLocaleTimeString('en-US', {
-                  hour: 'numeric',
-                  hour12: true,
+    interval = BackgroundTimer.setTimeout(
+      async () => {
+        console.log(
+          `runScrape: $${reward} at ${rate}s - Interval: ${interval}`,
+        );
+        let newHitsArray = [];
+        try {
+          const hits = await getHits({reward, qualified, masters, to})
+            .then(res => {
+              res.forEach(hit => {
+                hit.isNew = !scrapeRef.current.some(value => {
+                  return value.hit_set_id === hit.hit_set_id;
                 });
+                if (hit.isNew) {
+                  let d = new Date();
+                  hit.time = d.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    hour12: true,
+                  });
 
-                newHitsArray.unshift(hit);
+                  newHitsArray.unshift(hit);
+                }
+              });
+              if (filter === 1) {
+                // TODO: Magic number
+                let arr = [...newHitsArray, ...newHitsRef.current];
+                if (arr.length > 30) {
+                  let removeUntil = arr.length - 30;
+                  arr.splice(30, removeUntil);
+                }
+                setNewHits(arr);
+                console.timeEnd('runScrape');
+                return arr;
               }
-            });
-            if (filter === 1) {
-              // TODO: Magic number
-              let arr = [...newHitsArray, ...newHitsRef.current];
-              if (arr.length > 30) {
-                let removeUntil = arr.length - 30;
-                arr.splice(30, removeUntil);
-              }
-              setNewHits(arr);
               console.timeEnd('runScrape');
-              return arr;
-            }
-            console.timeEnd('runScrape');
-            return res;
-          })
-          .catch(getHitsError => {
-            console.log('getHits Error: ');
-            console.log(getHitsError);
-            const {type, code} = getHitsError;
-            if (name === 'Scrape' && type === 0) {
-              console.log('Logged out error');
-              setScraping(false);
-              error('Error getting data, are you loged in?', 'login').then(() =>
-                navigation.navigate('WebView'),
-              );
-            } else {
-              switch (code) {
-                case 429: // PRE TODO: Magic number
-                  setScrape(scrapeRef.current);
-                  setScraping(false);
-                  break;
+              return res;
+            })
+            .catch(getHitsError => {
+              console.log('getHits Error: ');
+              console.log(getHitsError);
+              const {type, code} = getHitsError;
+              if (name === 'Scrape' && type === 0) {
+                console.log('Logged out error');
+                setScraping(false);
+                error('Error getting data, are you loged in?', 'login').then(
+                  () => navigation.navigate('WebView'),
+                );
+              } else {
+                switch (code) {
+                  case 429: // PRE TODO: Magic number
+                    setScrape(scrapeRef.current);
+                    setScraping(false);
+                    break;
+                }
               }
+              setScrape(scrapeRef.current);
+            });
+          setScrape(hits);
+          if (scraping && interval != null) {
+            if (isMounted) {
+              runScrape();
             }
-            setScrape(scrapeRef.current);
-          });
-        setScrape(hits);
-        if (scraping && interval != null) {
-          if (isMounted) {
-            runScrape();
           }
+        } catch (runScrapeError) {
+          setScrape(scrapeRef.current);
+          console.log(`runScrape Error: ${runScrapeError}`);
+          setScraping(false);
         }
-      } catch (runScrapeError) {
-        setScrape(scrapeRef.current);
-        console.log(`runScrape Error: ${runScrapeError}`);
-        setScraping(false);
-      }
-    }, rate * 1000);
+      },
+      interval !== null ? rate * 1000 : 0,
+    );
   };
 
   useEffect(() => {
