@@ -4,6 +4,8 @@ import {FlatList, StyleSheet, SafeAreaView, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import AppBar from './ScrapeAppBar.js';
 
+import moment from 'moment';
+
 import BackgroundTimer from 'react-native-background-timer';
 import {getHits} from '../../utils';
 
@@ -67,12 +69,9 @@ const Scrape = props => {
                   return value.hit_set_id === hit.hit_set_id;
                 });
                 if (hit.isNew) {
-                  let d = new Date();
-                  hit.time = d.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    hour12: true,
-                  });
-
+                  hit.time = moment()
+                    .format('hh:mm a')
+                    .toString();
                   newHitsArray.unshift(hit);
                 }
               });
