@@ -1,6 +1,6 @@
 import 'react-native-get-random-values';
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Provider as PaperProvider} from 'react-native-paper';
 
 import {darkTheme, lightTheme} from './styles';
