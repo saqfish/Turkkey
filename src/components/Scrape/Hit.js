@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Card, Text, Title, Subheading} from 'react-native-paper';
+import {View, StyleSheet} from 'react-native';
+import {Card, Text, Subheading, Divider} from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -29,49 +29,69 @@ const Hit = React.memo(props => {
     size: 20,
   };
 
+  const styles = StyleSheet.create({
+    cardRight: {
+      marginVertical: 0,
+      paddingRight: 10,
+    },
+    cardContent: {
+      marginVertical: 0,
+    },
+    cardTitle: {
+      marginBottom: 0,
+      marginVertical: 0,
+    },
+    labels: {
+      flexDirection: 'row',
+      marginVertical: 0,
+    },
+    moneyLabel: {
+      fontSize: 16,
+    },
+    timeLabel: {
+      fontSize: 16,
+      marginLeft: 4,
+    },
+  });
+
   return (
-    <Card
-      onPress={() => {
-        navigation.navigate('HitInfo', {hit});
-      }}>
-      <Card.Title
-        subtitle={
-          <>
-            <Subheading>
-              <Icon name="currency-usd" color={'green'} size={16} />
-              {hit.monetary_reward.amount_in_dollars.toFixed(2)}
-            </Subheading>
-            <Subheading>
-              <Icon name="information-variant" color={'grey'} size={16} />
-              {hit.title}
-            </Subheading>
-          </>
-        }
-        title={
-          <>
-            <Title>
+    <View>
+      <Divider />
+      <Card
+        onPress={() => {
+          navigation.navigate('HitInfo', {hit});
+        }}>
+        <Card.Title
+          title={
+            <>
               <Text>
                 <Icon {...ratingProp} />
                 {hit.requester_name}
               </Text>
-            </Title>
-          </>
-        }
-        right={inProps => <Text>{hit.time}</Text>}
-        rightStyle={styles.cardRight}
-      />
-    </Card>
+            </>
+          }
+          subtitle={
+            <>
+              <Subheading>{hit.title}</Subheading>
+            </>
+          }
+          right={() => <Subheading> {hit.assignable_hits_count}</Subheading>}
+          rightStyle={styles.cardRight}
+          titleStyle={styles.cardTitle}
+        />
+        <Card.Content style={styles.labels}>
+          <Subheading style={styles.moneyLabel}>
+            <Icon name="currency-usd" color={'green'} size={16} />
+            {hit.monetary_reward.amount_in_dollars.toFixed(2)}
+          </Subheading>
+          <Subheading style={styles.timeLabel}>
+            <Icon name="clock" size={16} />
+            {hit.time}
+          </Subheading>
+        </Card.Content>
+      </Card>
+    </View>
   );
-});
-
-const styles = StyleSheet.create({
-  cardRight: {
-    marginVertical: 0,
-    paddingRight: 10,
-  },
-  cardContent: {
-    marginVertical: 0,
-  },
 });
 
 export default Hit;

@@ -1,7 +1,7 @@
 import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {FlatList, StyleSheet, SafeAreaView, View} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, Subheading} from 'react-native-paper';
 import AppBar from './ScrapeAppBar.js';
 
 import moment from 'moment';
@@ -19,6 +19,8 @@ const Scrape = props => {
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
+
+  const [count, setCount] = useState(0);
 
   const snackBar = useContext(snackBarContext);
   const error = snackBar;
@@ -41,14 +43,12 @@ const Scrape = props => {
   const {name} = props.route;
 
   const filterTypes = type => {
-    if (type > 3) {
+    if (type > 1) {
       type = 0;
     }
     const types = {
       0: 'all',
       1: 'new',
-      2: 'filter3',
-      3: 'filter4',
     };
     return {label: types[type], type};
   };
@@ -57,13 +57,11 @@ const Scrape = props => {
     console.time('runScrape');
     interval = BackgroundTimer.setTimeout(
       async () => {
-        console.log(
-          `runScrape: $${reward} at ${rate}s - Interval: ${interval}`,
-        );
         let newHitsArray = [];
         try {
           const hits = await getHits({reward, qualified, masters, to})
             .then(res => {
+              setCount(prev => prev + 1);
               res.forEach(hit => {
                 hit.isNew = !scrapeRef.current.some(value => {
                   return value.hit_set_id === hit.hit_set_id;
@@ -175,6 +173,9 @@ const Scrape = props => {
     <SafeAreaView style={styles.container}>
       <AppBar navigation={navigation} />
       <View style={styles.buttons}>
+        <View style={styles.count}>
+          <Subheading>{count}</Subheading>
+        </View>
         <Button
           mode="contained"
           onPress={() => setFilter(filterTypes(filter + 1).type)}>
@@ -211,6 +212,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+  count: {margin: 5},
 });
 
 export default Scrape;
