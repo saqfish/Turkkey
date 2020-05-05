@@ -29,7 +29,7 @@ const Scrape = props => {
   const {scrapeValues, settingsValues} = context;
 
   const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
-  const {to} = settingsValues.settingsValues;
+  const {quickMenu, to} = settingsValues.settingsValues;
 
   let isMounted = true;
 
@@ -175,24 +175,26 @@ const Scrape = props => {
   return (
     <SafeAreaView style={styles.container}>
       <AppBar navigation={navigation} />
-      <View style={styles.buttons}>
-        <View style={styles.count}>
-          <Subheading>{count}</Subheading>
+      {quickMenu ? (
+        <View style={styles.buttons}>
+          <View style={styles.count}>
+            <Subheading>{count}</Subheading>
+          </View>
+          <Button
+            mode="contained"
+            onPress={() => setFilter(filterTypes(filter + 1).type)}>
+            {filterTypes(filter).label}
+          </Button>
+          <Button
+            icon={scraping ? 'stop-circle' : 'flash-circle'}
+            mode="contained"
+            disabled={!interval && scraping}
+            loading={!interval && scraping}
+            onPress={() => (scraping ? stopScrape() : startScrape())}>
+            {scraping ? 'Stop' : 'Start'}
+          </Button>
         </View>
-        <Button
-          mode="contained"
-          onPress={() => setFilter(filterTypes(filter + 1).type)}>
-          {filterTypes(filter).label}
-        </Button>
-        <Button
-          icon={scraping ? 'stop-circle' : 'flash-circle'}
-          mode="contained"
-          disabled={!interval && scraping}
-          loading={!interval && scraping}
-          onPress={() => (scraping ? stopScrape() : startScrape())}>
-          {scraping ? 'Stop' : 'Start'}
-        </Button>
-      </View>
+      ) : null}
       <FlatList
         data={scrape}
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
