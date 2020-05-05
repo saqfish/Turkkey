@@ -88,8 +88,26 @@ const HitInfo = props => {
           <Paragraph>{hit.description}</Paragraph>
         </Card.Content>
         <Card.Actions style={styles.buttonsContainer}>
-          <Button title="Accept" onPress={() => {}} />
-          <Button title="Preview" onPress={() => {}} />
+          <Button
+            title="Accept"
+            onPress={() => {
+              const uri = `https://worker.mturk.com/${
+                hit.accept_project_task_url
+              }`;
+              navigation.navigate('WebView', {
+                uri,
+              });
+            }}
+          />
+          <Button
+            title="Preview"
+            onPress={() => {
+              const uri = `https://worker.mturk.com/${hit.project_tasks_url}`;
+              navigation.navigate('WebView', {
+                uri,
+              });
+            }}
+          />
         </Card.Actions>
       </Card>
     </View>

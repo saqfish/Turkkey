@@ -4,12 +4,13 @@ import ReactWebView from 'react-native-webview';
 import AppBar from './../AppBar/AppBar.js';
 
 const WebView = props => {
-  const {navigation} = props;
+  const {navigation, route} = props;
+  const {uri} = route.params;
   return (
     <View style={styles.webViewView}>
       <AppBar navigation={navigation} />
       <ReactWebView
-        source={{uri: 'https://worker.mturk.com/dashboard'}}
+        source={{uri}}
         onNavigationStateChange={state => {}}
         onError={() => console.warn('error')}
       />

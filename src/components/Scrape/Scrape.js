@@ -95,7 +95,10 @@ const Scrape = props => {
                 console.log('Logged out error');
                 setScraping(false);
                 error('Error getting data, are you loged in?', 'login').then(
-                  () => navigation.navigate('WebView'),
+                  () =>
+                    navigation.navigate('WebView', {
+                      uri: 'https://worker.mturk.com/dashboard',
+                    }),
                 );
               } else {
                 switch (code) {
