@@ -12,12 +12,8 @@ import {
 import AppBar from './../AppBar/AppBar.js';
 
 const HitInfo = props => {
-  const {hit} = props.route.params;
+  const {hit, hasRating} = props.route.params;
   const {theme, navigation} = props;
-  const hasRating =
-    typeof hit.rating !== 'undefined' &&
-    typeof hit.rating.attrs !== 'undefined' &&
-    typeof hit.rating.attrs.pay !== 'undefined';
   const comm = hasRating ? hit.rating.attrs.comm : 0;
   const fair = hasRating ? hit.rating.attrs.fair : 0;
   const fast = hasRating ? hit.rating.attrs.fast : 0;
@@ -72,10 +68,18 @@ const HitInfo = props => {
       <AppBar navigation={navigation} />
       <Card>
         <Card.Title title={hit.requester_name} />
-        <Card.Content>{progress('Communcation', comm)}</Card.Content>
-        <Card.Content>{progress('Fair', fair)}</Card.Content>
-        <Card.Content>{progress('Fast', fast)}</Card.Content>
-        <Card.Content>{progress('Pay', pay)}</Card.Content>
+        {hasRating ? (
+          <>
+            <Card.Content>{progress('Communcation', comm)}</Card.Content>
+            <Card.Content>{progress('Fair', fair)}</Card.Content>
+            <Card.Content>{progress('Fast', fast)}</Card.Content>
+            <Card.Content>{progress('Pay', pay)}</Card.Content>
+          </>
+        ) : (
+          <Card.Content>
+            <Subheading>No rating data available</Subheading>
+          </Card.Content>
+        )}
         <Card.Actions style={styles.buttonsContainer}>
           <Button onPress={() => {}} title="Block" />
           <Button onPress={() => {}} title="Include" />
@@ -84,9 +88,6 @@ const HitInfo = props => {
       <Divider />
       <Card>
         <Card.Title title={hit.title} />
-        <Card.Content>
-          <Paragraph>{hit.description}</Paragraph>
-        </Card.Content>
         <Card.Actions style={styles.buttonsContainer}>
           <Button
             title="Accept"
@@ -109,6 +110,9 @@ const HitInfo = props => {
             }}
           />
         </Card.Actions>
+        <Card.Content>
+          <Paragraph>{hit.description}</Paragraph>
+        </Card.Content>
       </Card>
     </View>
   );

@@ -1,7 +1,13 @@
 import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import {FlatList, StyleSheet, SafeAreaView, View} from 'react-native';
-import {Button, Subheading} from 'react-native-paper';
+import {
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+  View,
+} from 'react-native';
+import {Subheading, withTheme} from 'react-native-paper';
 import AppBar from './ScrapeAppBar.js';
 
 import moment from 'moment';
@@ -16,6 +22,7 @@ import Hit from './Hit';
 
 let interval = null;
 const Scrape = props => {
+  const {theme} = props;
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
@@ -29,7 +36,7 @@ const Scrape = props => {
   const {scrapeValues, settingsValues} = context;
 
   const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
-  const {quickMenu, to} = settingsValues.settingsValues;
+  const {quickMenu, pre, to} = settingsValues.settingsValues;
 
   let isMounted = true;
 
@@ -104,7 +111,13 @@ const Scrape = props => {
                 switch (code) {
                   case 429: // PRE TODO: Magic number
                     setScrape(scrapeRef.current);
-                    setScraping(false);
+                    if (pre) {
+                      BackgroundTimer.setTimeout(() => {
+                        setScraping(true);
+                      }, 2000);
+                    } else {
+                      setScraping(false);
+                    }
                     break;
                 }
               }
@@ -171,28 +184,47 @@ const Scrape = props => {
   const stopScrape = () => {
     setScraping(false);
   };
-
+  const Button = buttonProps => {
+    const {title, disabled, onPress} = buttonProps;
+    const style = StyleSheet.create({
+      button: {
+        backgroundColor: theme.colors.primary,
+        padding: 5,
+      },
+      buttonLabel: {
+        color: '#FFFFFF',
+        opacity: disabled ? 0.3 : 1,
+        padding: 5,
+      },
+    });
+    return (
+      <TouchableOpacity style={style.button} onPress={onPress}>
+        <Subheading style={style.buttonLabel}>{title.toUpperCase()}</Subheading>
+      </TouchableOpacity>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <AppBar navigation={navigation} />
+      <AppBar navigation={navigation}>
+        <Button
+          title={scraping ? 'Stop' : 'Start'}
+          icon={scraping ? 'stop-circle' : 'flash-circle'}
+          color={theme.colors.primary}
+          disabled={!interval && scraping}
+          loading={!interval && scraping}
+          onPress={() => (scraping ? stopScrape() : startScrape())}
+        />
+      </AppBar>
       {quickMenu ? (
         <View style={styles.buttons}>
           <View style={styles.count}>
             <Subheading>{count}</Subheading>
           </View>
           <Button
-            mode="contained"
-            onPress={() => setFilter(filterTypes(filter + 1).type)}>
-            {filterTypes(filter).label}
-          </Button>
-          <Button
-            icon={scraping ? 'stop-circle' : 'flash-circle'}
-            mode="contained"
-            disabled={!interval && scraping}
-            loading={!interval && scraping}
-            onPress={() => (scraping ? stopScrape() : startScrape())}>
-            {scraping ? 'Stop' : 'Start'}
-          </Button>
+            title={filterTypes(filter).label}
+            color={theme.colors.primary}
+            onPress={() => setFilter(filterTypes(filter + 1).type)}
+          />
         </View>
       ) : null}
       <FlatList
@@ -220,4 +252,4 @@ const styles = StyleSheet.create({
   count: {margin: 5},
 });
 
-export default Scrape;
+export default withTheme(Scrape);

@@ -152,7 +152,7 @@ const Settings = props => {
       <List.Section>
         <List.Subheader>Pre</List.Subheader>
         <List.Item
-          title={<Text>Pause on PRE error</Text>}
+          title={<Text>Continue PRE</Text>}
           right={inProps => {
             return (
               <Switch
