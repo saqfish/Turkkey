@@ -78,10 +78,24 @@ export default function App() {
       if (newScrapeValues !== null) {
         const values = JSON.parse(newScrapeValues);
         setScrapeValues(values);
+      } else {
+        setScrapeValues({
+          reward: 1,
+          rate: 1,
+          qualified: true,
+          masters: false,
+        });
       }
       if (newScrapeValues !== null) {
         const values = JSON.parse(newSettingsValues);
         setSettingsValues(values);
+      } else {
+        setSettingsValues({
+          dark: true,
+          quckMenu: true,
+          pre: true,
+          to: true,
+        });
       }
     } catch (getError) {
       console.log(getError);
