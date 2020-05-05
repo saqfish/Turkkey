@@ -32,11 +32,15 @@ const Settings = props => {
   const onMastersChange = value =>
     setScrapeValues(prev => ({...prev, masters: value}));
 
-  const {dark, pre, to} = settingsValues.settingsValues;
   const {setSettingsValues} = settingsValues;
+
+  const {dark, pre, to, quickMenu} = settingsValues.settingsValues;
 
   const onDarkChange = value =>
     setSettingsValues(prev => ({...prev, dark: value}));
+
+  const onQuickMenuChange = value =>
+    setSettingsValues(prev => ({...prev, quickMenu: value}));
 
   const onTOChange = value => setSettingsValues(prev => ({...prev, to: value}));
 
@@ -127,6 +131,18 @@ const Settings = props => {
                 color={styles.switch.color}
                 value={dark}
                 onValueChange={onDarkChange}
+              />
+            );
+          }}
+        />
+        <List.Item
+          title={<Text>Quick Menu</Text>}
+          right={inProps => {
+            return (
+              <Switch
+                color={styles.switch.color}
+                value={quickMenu}
+                onValueChange={onQuickMenuChange}
               />
             );
           }}
