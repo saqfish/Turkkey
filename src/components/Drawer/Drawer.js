@@ -67,6 +67,7 @@ const Drawer = props => {
             }}
             name="WebView"
             component={WebView}
+            initialParams={{uri: 'https://worker.mturk.com/dashboard'}}
           />
           <DrawerNav.Screen name="HitInfo" component={HitInfo} />
         </DrawerNav.Navigator>
