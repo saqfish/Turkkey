@@ -1,4 +1,3 @@
-import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 
@@ -6,111 +5,47 @@ import AppBar from './ScrapeAppBar.js';
 import Button from './Button';
 import {ScrapeStyles as styles} from '../../styles';
 
-import moment from 'moment';
-
-import BackgroundTimer from 'react-native-background-timer';
-
-import {getHits} from '../../utils';
 import {scrapeContext, snackBarContext} from '../Context';
 
 import Hit from './Hit';
+import {runScrape, stopScrape} from './scrape';
 
-let interval = null;
 const Scrape = props => {
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
 
-  const error = useContext(snackBarContext);
-
   const context = useContext(scrapeContext);
   const {scrapeValues, settingsValues} = context;
-
-  const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
-  const {pre, to, filter} = settingsValues.settingsValues;
 
   const init = useRef(true);
   const scrapeRef = useRef([]);
   const newHitsRef = useRef([]);
 
+  const error = useContext(snackBarContext);
   const {navigation} = props;
   const {name} = props.route;
 
-  const runScrape = async () => {
-    console.time({filter});
-    console.time('runScrape');
-    interval = BackgroundTimer.setTimeout(
-      async () => {
-        let newHitsArray = [];
-        try {
-          const hits = await getHits({reward, qualified, masters, to})
-            .then(res => {
-              res.forEach(hit => {
-                hit.isNew = !scrapeRef.current.some(value => {
-                  return value.hit_set_id === hit.hit_set_id;
-                });
-                if (hit.isNew) {
-                  newHitsArray.unshift(hit);
-                }
-                hit.time = moment()
-                  .format('hh:mm a')
-                  .toString();
-              });
-              if (filter === 1) {
-                // TODO: Magic number
-                let arr = [...newHitsArray, ...newHitsRef.current];
-                if (arr.length > 30) {
-                  let removeUntil = arr.length - 30;
-                  arr.splice(30, removeUntil);
-                }
-                setNewHits(arr);
-                console.timeEnd('runScrape');
-                return arr;
-              }
-              console.timeEnd('runScrape');
-              return res;
-            })
-            .catch(getHitsError => {
-              console.log('getHits Error: ');
-              console.log(getHitsError);
-              const {type, code} = getHitsError;
-              if (name === 'Scrape' && type === 0) {
-                console.log('Logged out error');
-                setScraping(false);
-                error('Error getting data, are you loged in?', 'login').then(
-                  () =>
-                    navigation.navigate('WebView', {
-                      uri: 'https://worker.mturk.com/dashboard',
-                    }),
-                );
-              } else {
-                switch (code) {
-                  case 429: // PRE TODO: Magic number
-                    setScrape(scrapeRef.current);
-                    if (pre) {
-                      BackgroundTimer.setTimeout(() => {
-                        setScraping(true);
-                      }, 2000);
-                    } else {
-                      setScraping(false);
-                    }
-                    break;
-                }
-              }
-              setScrape(scrapeRef.current);
-            });
-          setScrape(hits);
-          if (scraping && interval != null) {
-            runScrape();
-          }
-        } catch (runScrapeError) {
-          setScrape(scrapeRef.current);
-          console.log(`runScrape Error: ${runScrapeError}`);
-          setScraping(false);
-        }
+  const getParams = () => {
+    return {
+      scrapeValues: {...scrapeValues.scrapeValues},
+      settingsValues: {...settingsValues.settingsValues},
+      refs: {
+        scrapeRef,
+        newHitsRef,
       },
-      interval !== null ? rate * 1000 : 0,
-    );
+      methods: {
+        setScraping,
+        setNewHits,
+        setScrape,
+      },
+      misc: {
+        scraping,
+        name,
+        error,
+        navigation,
+      },
+    };
   };
 
   useEffect(() => {
@@ -119,11 +54,10 @@ const Scrape = props => {
     } else {
       if (scraping) {
         console.log('Scrape: starting');
-        runScrape();
+        runScrape(getParams());
       } else {
-        console.log(`Scrape: stoping interval ${interval}`);
-        BackgroundTimer.clearTimeout(interval);
-        interval = null;
+        console.log('Scrape: stoping');
+        stopScrape();
       }
     }
   }, [scraping]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -140,8 +74,7 @@ const Scrape = props => {
   useEffect(() => {
     return () => {
       setScraping(false);
-      BackgroundTimer.clearTimeout(interval);
-      interval = null;
+      stopScrape();
     };
   }, []);
 
@@ -151,8 +84,8 @@ const Scrape = props => {
         <Button
           title={scraping ? 'Stop' : 'Start'}
           icon={scraping ? 'stop-circle' : 'flash-circle'}
-          disabled={!interval && scraping}
-          loading={!interval && scraping}
+          // disabled={!interval && scraping}
+          // loading={!interval && scraping}
           onPress={() => (scraping ? setScraping(false) : setScraping(true))}
         />
       </AppBar>
@@ -161,7 +94,6 @@ const Scrape = props => {
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
         keyExtractor={(item, index) => `${index}`}
         initialNumToRender={30}
-        onPress={() => runScrape()}
         refreshing={false}
       />
     </SafeAreaView>
