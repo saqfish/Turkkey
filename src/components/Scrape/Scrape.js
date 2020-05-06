@@ -4,7 +4,7 @@ import {FlatList, SafeAreaView} from 'react-native';
 
 import AppBar from './ScrapeAppBar.js';
 import Button from './Button';
-import {scrapeScreenStyles as styles} from './styles';
+import {ScrapeStyles as styles} from '../../styles';
 
 import moment from 'moment';
 
@@ -28,8 +28,6 @@ const Scrape = props => {
 
   const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
   const {pre, to, filter} = settingsValues.settingsValues;
-
-  console.log(filter);
 
   const init = useRef(true);
   const scrapeRef = useRef([]);

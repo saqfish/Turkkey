@@ -154,4 +154,25 @@ const getValues = () => {
     }
   });
 };
-export {getHits, filterTypes, getPayIcon, getPayColor, storeValues, getValues};
+
+const getRatingColor = rating => {
+  return rating >= 4
+    ? 'green'
+    : rating >= 3
+    ? 'yellow'
+    : rating >= 2
+    ? 'orange'
+    : rating >= 1
+    ? 'red'
+    : 'grey';
+};
+
+export {
+  getHits,
+  filterTypes,
+  getPayIcon,
+  getPayColor,
+  getRatingColor,
+  storeValues,
+  getValues,
+};

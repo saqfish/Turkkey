@@ -2,7 +2,7 @@ import 'react-native-get-random-values';
 import React, {useEffect, useState, useRef} from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
 
-import {darkTheme, lightTheme} from './styles';
+import {AppStyles} from './styles';
 import {getValues, storeValues} from './utils';
 
 import ErrorBar from './components/ErrorBar';
@@ -11,6 +11,7 @@ import Drawer from './components/Drawer/Drawer';
 import {snackBarContext} from './components/Context';
 
 export default function App() {
+  const {darkTheme, lightTheme} = AppStyles;
   const initialValuesLoaded = useRef(false);
   const navigationRef = useRef(null);
 

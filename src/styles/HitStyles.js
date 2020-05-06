@@ -1,17 +1,6 @@
 import {StyleSheet} from 'react-native';
-const scrapeScreenStyles = StyleSheet.create({
-  view: {
-    flex: 1,
-    marginTop: 0,
-  },
-  buttons: {
-    flex: 0,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-});
 
-const hitStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   cardStyle: {
     paddingRight: 10,
     paddingLeft: 10,
@@ -51,4 +40,4 @@ const hitStyles = StyleSheet.create({
   },
 });
 
-export {hitStyles, scrapeScreenStyles};
+export default styles;
