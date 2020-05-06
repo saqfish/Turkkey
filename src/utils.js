@@ -1,8 +1,6 @@
-// const toUrl = "https://turkoption.ucsd.edu/api";
-// const path = "/multi-attrs.php";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import {defaults} from './common';
+import {defaults, errorTypes, urls} from './common';
 const cache = {};
 
 const getHits = values => {
@@ -20,11 +18,9 @@ const getHits = values => {
       .then(response => {
         if (
           response.request &&
-          response.request.responseURL.includes(
-            'https://www.amazon.com/ap/signin',
-          )
+          response.request.responseURL.includes(urls.SIGNIN)
         ) {
-          reject({type: 0, code: null}); // type 0 = logged out, TODO: Magic number
+          reject({type: errorTypes.LOGGED_OUT, code: null});
         }
         let res = response.data;
         if (to) {
@@ -38,12 +34,12 @@ const getHits = values => {
       .catch(getHitsError => {
         if (getHitsError.response) {
           console.log(getHitsError.response);
-          reject({type: 1, code: getHitsError.response.status}); // type 1 = Pre error , TODO: Magic number
+          reject({type: errorTypes.PRE, code: getHitsError.response.status});
         } else if (getHitsError.request) {
-          reject({type: 2, code: null}); // type 1 = , TODO: Magic number
+          reject({type: errorTypes.REQUEST, code: null});
         } else {
           console.log(getHitsError);
-          reject({type: 9, code: null}); // type 1 = unknown, TODO: Magic number
+          reject({type: errorTypes.UNKNOWN, code: null});
         }
       });
   });
@@ -61,7 +57,7 @@ const getTO = hits => {
       ids.push(hit.requester_id);
     }
   });
-  const url = `https://turkopticon.ucsd.edu/api/multi-attrs.php?ids=${ids.toString()}`;
+  const url = `urls.TO${ids.toString()}`;
   return new Promise((resolve, reject) => {
     if (ids.length > 0) {
       axios

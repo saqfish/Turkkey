@@ -3,6 +3,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import moment from 'moment';
 
 import {getHits} from '../../utils';
+import {scrapeErrors, filters} from '../../common';
 
 let interval = null;
 const runScrape = async values => {
@@ -31,8 +32,7 @@ const runScrape = async values => {
                 .format('hh:mm a')
                 .toString();
             });
-            if (filter === 1) {
-              // TODO: Magic number
+            if (filter === filters.NEW) {
               let arr = [...newHitsArray, ...newHitsRef.current];
               if (arr.length > 30) {
                 let removeUntil = arr.length - 30;
@@ -59,7 +59,7 @@ const runScrape = async values => {
               );
             } else {
               switch (code) {
-                case 429: // PRE TODO: Magic number
+                case scrapeErrors.PRE:
                   setScrape(scrapeRef.current);
                   if (pre) {
                     BackgroundTimer.setTimeout(() => {
