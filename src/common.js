@@ -7,6 +7,7 @@ const defaults = {
   },
   settings: {
     dark: true,
+    filter: 0,
     quckMenu: true,
     pre: true,
     to: true,

@@ -6,6 +6,10 @@ import {Divider, List, Switch, Text, withTheme} from 'react-native-paper';
 
 import {scrapeContext} from '../Context';
 
+import {filterTypes} from '../../utils';
+
+import Button from './Button';
+
 const Settings = props => {
   const {navigation} = props;
   const {theme} = props;
@@ -34,13 +38,13 @@ const Settings = props => {
 
   const {setSettingsValues} = settingsValues;
 
-  const {dark, pre, to, quickMenu} = settingsValues.settingsValues;
+  const {dark, pre, to, filter} = settingsValues.settingsValues;
 
   const onDarkChange = value =>
     setSettingsValues(prev => ({...prev, dark: value}));
 
-  const onQuickMenuChange = value =>
-    setSettingsValues(prev => ({...prev, quickMenu: value}));
+  const setFilter = value =>
+    setSettingsValues(prev => ({...prev, filter: value}));
 
   const onTOChange = value => setSettingsValues(prev => ({...prev, to: value}));
 
@@ -136,13 +140,12 @@ const Settings = props => {
           }}
         />
         <List.Item
-          title={<Text>Quick Menu</Text>}
+          title={<Text>Filter by</Text>}
           right={inProps => {
             return (
-              <Switch
-                color={styles.switch.color}
-                value={quickMenu}
-                onValueChange={onQuickMenuChange}
+              <Button
+                title={filterTypes(filter).label}
+                onPress={() => setFilter(filterTypes(filter + 1).type)}
               />
             );
           }}

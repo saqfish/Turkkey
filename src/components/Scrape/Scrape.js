@@ -1,6 +1,6 @@
 import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import {FlatList, SafeAreaView, View} from 'react-native';
+import {FlatList, SafeAreaView} from 'react-native';
 
 import AppBar from './ScrapeAppBar.js';
 import Button from './Button';
@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import BackgroundTimer from 'react-native-background-timer';
 
-import {getHits, filterTypes} from '../../utils';
+import {getHits} from '../../utils';
 import {scrapeContext, snackBarContext} from '../Context';
 
 import Hit from './Hit';
@@ -20,7 +20,6 @@ const Scrape = props => {
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
-  const [filter, setFilter] = useState(0);
 
   const error = useContext(snackBarContext);
 
@@ -28,7 +27,9 @@ const Scrape = props => {
   const {scrapeValues, settingsValues} = context;
 
   const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
-  const {quickMenu, pre, to} = settingsValues.settingsValues;
+  const {pre, to, filter} = settingsValues.settingsValues;
+
+  console.log(filter);
 
   const init = useRef(true);
   const scrapeRef = useRef([]);
@@ -38,6 +39,7 @@ const Scrape = props => {
   const {name} = props.route;
 
   const runScrape = async () => {
+    console.time({filter});
     console.time('runScrape');
     interval = BackgroundTimer.setTimeout(
       async () => {
@@ -156,14 +158,6 @@ const Scrape = props => {
           onPress={() => (scraping ? setScraping(false) : setScraping(true))}
         />
       </AppBar>
-      {quickMenu ? (
-        <View style={styles.buttons}>
-          <Button
-            title={filterTypes(filter).label}
-            onPress={() => setFilter(filterTypes(filter + 1).type)}
-          />
-        </View>
-      ) : null}
       <FlatList
         data={scrape}
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
