@@ -1,36 +1,28 @@
 import 'react-native-console-time-polyfill';
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import {
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  SafeAreaView,
-  View,
-} from 'react-native';
-import {Subheading, withTheme} from 'react-native-paper';
+import {FlatList, SafeAreaView, View} from 'react-native';
+
 import AppBar from './ScrapeAppBar.js';
+import Button from './Button';
+import {scrapeScreenStyles as styles} from './styles';
 
 import moment from 'moment';
 
 import BackgroundTimer from 'react-native-background-timer';
-import {getHits} from '../../utils';
 
-import {scrapeContext} from '../Context';
-import {snackBarContext} from '../Context';
+import {getHits, filterTypes} from '../../utils';
+import {scrapeContext, snackBarContext} from '../Context';
 
 import Hit from './Hit';
 
 let interval = null;
 const Scrape = props => {
-  const {theme} = props;
   const [scrape, setScrape] = useState([]);
   const [newHits, setNewHits] = useState([]);
   const [scraping, setScraping] = useState(false);
+  const [filter, setFilter] = useState(0);
 
-  const [count, setCount] = useState(0);
-
-  const snackBar = useContext(snackBarContext);
-  const error = snackBar;
+  const error = useContext(snackBarContext);
 
   const context = useContext(scrapeContext);
   const {scrapeValues, settingsValues} = context;
@@ -38,27 +30,12 @@ const Scrape = props => {
   const {reward, rate, qualified, masters} = scrapeValues.scrapeValues;
   const {quickMenu, pre, to} = settingsValues.settingsValues;
 
-  let isMounted = true;
-
-  const [filter, setFilter] = useState(0);
-
   const init = useRef(true);
   const scrapeRef = useRef([]);
   const newHitsRef = useRef([]);
 
   const {navigation} = props;
   const {name} = props.route;
-
-  const filterTypes = type => {
-    if (type > 1) {
-      type = 0;
-    }
-    const types = {
-      0: 'all',
-      1: 'new',
-    };
-    return {label: types[type], type};
-  };
 
   const runScrape = async () => {
     console.time('runScrape');
@@ -68,7 +45,6 @@ const Scrape = props => {
         try {
           const hits = await getHits({reward, qualified, masters, to})
             .then(res => {
-              setCount(prev => prev + 1);
               res.forEach(hit => {
                 hit.isNew = !scrapeRef.current.some(value => {
                   return value.hit_set_id === hit.hit_set_id;
@@ -125,9 +101,7 @@ const Scrape = props => {
             });
           setScrape(hits);
           if (scraping && interval != null) {
-            if (isMounted) {
-              runScrape();
-            }
+            runScrape();
           }
         } catch (runScrapeError) {
           setScrape(scrapeRef.current);
@@ -150,7 +124,6 @@ const Scrape = props => {
         console.log(`Scrape: stoping interval ${interval}`);
         BackgroundTimer.clearTimeout(interval);
         interval = null;
-        // setScrape([]);
       }
     }
   }, [scraping]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -159,70 +132,34 @@ const Scrape = props => {
     if (typeof scrape !== 'undefined') {
       scrapeRef.current = scrape;
     }
-  }, [scrape]);
-
-  useEffect(() => {
     if (typeof newHits !== 'undefined') {
       newHitsRef.current = newHits;
     }
-  }, [newHits]);
+  }, [scrape, newHits]);
 
   useEffect(() => {
     return () => {
       setScraping(false);
       BackgroundTimer.clearTimeout(interval);
       interval = null;
-      isMounted = false; // eslint-disable-line react-hooks/exhaustive-deps
     };
   }, []);
 
-  const startScrape = () => {
-    if (!scraping && interval === null) {
-      setScraping(true);
-    }
-  };
-  const stopScrape = () => {
-    setScraping(false);
-  };
-  const Button = buttonProps => {
-    const {title, disabled, onPress} = buttonProps;
-    const style = StyleSheet.create({
-      button: {
-        backgroundColor: theme.colors.primary,
-        padding: 5,
-      },
-      buttonLabel: {
-        color: '#FFFFFF',
-        opacity: disabled ? 0.3 : 1,
-        padding: 5,
-      },
-    });
-    return (
-      <TouchableOpacity style={style.button} onPress={onPress}>
-        <Subheading style={style.buttonLabel}>{title.toUpperCase()}</Subheading>
-      </TouchableOpacity>
-    );
-  };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.view}>
       <AppBar navigation={navigation}>
         <Button
           title={scraping ? 'Stop' : 'Start'}
           icon={scraping ? 'stop-circle' : 'flash-circle'}
-          color={theme.colors.primary}
           disabled={!interval && scraping}
           loading={!interval && scraping}
-          onPress={() => (scraping ? stopScrape() : startScrape())}
+          onPress={() => (scraping ? setScraping(false) : setScraping(true))}
         />
       </AppBar>
       {quickMenu ? (
         <View style={styles.buttons}>
-          <View style={styles.count}>
-            <Subheading>{count}</Subheading>
-          </View>
           <Button
             title={filterTypes(filter).label}
-            color={theme.colors.primary}
             onPress={() => setFilter(filterTypes(filter + 1).type)}
           />
         </View>
@@ -232,24 +169,11 @@ const Scrape = props => {
         renderItem={({item}) => <Hit hit={item} navigation={navigation} />}
         keyExtractor={(item, index) => `${index}`}
         initialNumToRender={30}
-        onRefresh={() => (scraping ? stopScrape() : startScrape())}
+        onPress={() => runScrape()}
         refreshing={false}
       />
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 0,
-  },
-  scrollView: {},
-  buttons: {
-    flex: 0,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  count: {margin: 5},
-});
 
-export default withTheme(Scrape);
+export default Scrape;

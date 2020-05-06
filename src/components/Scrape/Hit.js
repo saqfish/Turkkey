@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import {
   IconButton,
   Card,
@@ -11,20 +11,11 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import {hitStyles as styles} from './styles';
+import {getPayColor, getPayIcon} from '../../utils';
+
 const Hit = React.memo(props => {
   const {hit, navigation, theme} = props;
-  const getPayColor = pay => {
-    return pay > 4 ? 'green' : pay > 3 ? 'yellow' : pay > 2 ? 'orange' : 'red';
-  };
-  const getPayIcon = pay => {
-    return pay > 4
-      ? 'arrow-up'
-      : pay > 3
-      ? 'arrow-top-right'
-      : pay > 2
-      ? 'arrow-bottom-right'
-      : 'arrow-down';
-  };
 
   const hasRating =
     typeof hit.rating !== 'undefined' &&
@@ -36,46 +27,6 @@ const Hit = React.memo(props => {
     size: 20,
   };
 
-  const styles = StyleSheet.create({
-    cardStyle: {
-      paddingRight: 10,
-      paddingLeft: 10,
-      paddingBottom: 0,
-      justifyContent: 'flex-start',
-    },
-    cardRight: {
-      justifyContent: 'flex-start',
-    },
-    cardLeft: {
-      justifyContent: 'flex-end',
-      height: 20,
-      width: 20,
-    },
-    cardTitle: {
-      marginVertical: 0,
-      marginBottom: 2,
-    },
-    cardSubtitle: {
-      justifyContent: 'flex-start',
-      marginBottom: 0,
-    },
-    cardContent: {
-      flexDirection: 'row',
-      marginVertical: 0,
-      paddingHorizontal: 10,
-      paddingVertical: 0,
-      paddingTop: 0,
-      paddingBottom: 10,
-    },
-    moneyLabel: {
-      fontSize: 16,
-    },
-    timeLabel: {
-      fontSize: 16,
-      marginLeft: 4,
-    },
-  });
-
   return (
     <View>
       <Divider />
@@ -85,18 +36,12 @@ const Hit = React.memo(props => {
         }}>
         <Card.Title
           title={
-            <>
-              <Text>
-                <Icon {...ratingProp} />
-                {hit.requester_name}
-              </Text>
-            </>
+            <Text>
+              <Icon {...ratingProp} />
+              {hit.requester_name}
+            </Text>
           }
-          subtitle={
-            <>
-              <Subheading>{hit.title}</Subheading>
-            </>
-          }
+          subtitle={<Subheading>{hit.title}</Subheading>}
           right={inProps => (
             <IconButton
               {...inProps}
