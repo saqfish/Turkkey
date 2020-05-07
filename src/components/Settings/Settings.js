@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
-import AppBar from './../AppBar/AppBar.js';
+import AppBar from './SettingsAppBar.js';
 import Slider from '@react-native-community/slider';
 import {Divider, List, Switch, Text, withTheme} from 'react-native-paper';
 

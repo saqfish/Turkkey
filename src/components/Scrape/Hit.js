@@ -1,13 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {
-  IconButton,
-  Card,
-  Text,
-  Subheading,
-  Divider,
-  withTheme,
-} from 'react-native-paper';
+import {Card, Text, Subheading, Divider, withTheme} from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -29,8 +22,9 @@ const Hit = React.memo(props => {
 
   return (
     <View>
-      <Divider />
+      <Divider inset={true} />
       <Card
+        elevation={0}
         onPress={() => {
           navigation.navigate('HitInfo', {hit, hasRating});
         }}>
@@ -43,18 +37,13 @@ const Hit = React.memo(props => {
           }
           subtitle={<Subheading>{hit.title}</Subheading>}
           right={inProps => (
-            <IconButton
-              {...inProps}
-              icon="chevron-right"
-              onPress={() => {
-                const uri = `https://worker.mturk.com/${
-                  hit.accept_project_task_url
-                }`;
-                navigation.navigate('WebView', {
-                  uri,
-                });
-              }}
-            />
+            <View {...inProps}>
+              <Subheading style={styles.timeLabel}>{hit.time}</Subheading>
+              <Subheading style={styles.moneyLabel}>
+                <Icon name="currency-usd" color={'green'} size={16} />
+                {hit.monetary_reward.amount_in_dollars.toFixed(2)}
+              </Subheading>
+            </View>
           )}
           left={() => (
             <Icon
@@ -63,7 +52,7 @@ const Hit = React.memo(props => {
                   ? 'file-document-box-multiple-outline'
                   : 'file-document-box-outline'
               }
-              size={20}
+              size={25}
               color={theme.colors.text}
             />
           )}
@@ -73,16 +62,6 @@ const Hit = React.memo(props => {
           leftStyle={styles.cardLeft}
           titleStyle={styles.cardTitle}
         />
-        <Card.Content style={styles.cardContent}>
-          <Subheading style={styles.moneyLabel}>
-            <Icon name="currency-usd" color={'green'} size={16} />
-            {hit.monetary_reward.amount_in_dollars.toFixed(2)}
-          </Subheading>
-          <Subheading style={styles.timeLabel}>
-            <Icon name="clock" size={16} />
-            {hit.time}
-          </Subheading>
-        </Card.Content>
       </Card>
     </View>
   );

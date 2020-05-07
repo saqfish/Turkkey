@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import ReactWebView from 'react-native-webview';
-import AppBar from './../AppBar/AppBar.js';
+import AppBar from './WebViewAppBar.js';
 
 const WebView = props => {
   const {navigation, route} = props;

@@ -4,16 +4,17 @@ const styles = StyleSheet.create({
   cardStyle: {
     paddingRight: 10,
     paddingLeft: 10,
-    paddingBottom: 0,
+    paddingBottom: 5,
+    paddingTop: 5,
     justifyContent: 'flex-start',
   },
   cardRight: {
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
   },
   cardLeft: {
     justifyContent: 'flex-end',
-    height: 20,
-    width: 20,
+    height: 25,
+    width: 25,
   },
   cardTitle: {
     marginVertical: 0,
@@ -33,10 +34,11 @@ const styles = StyleSheet.create({
   },
   moneyLabel: {
     fontSize: 16,
+    alignSelf: 'flex-end',
   },
   timeLabel: {
     fontSize: 16,
-    marginLeft: 4,
+    alignSelf: 'flex-end',
   },
 });
 
