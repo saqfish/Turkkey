@@ -7,6 +7,7 @@ module.exports = {
         alias: {
           '@common': './src/common.js',
           '@utils': './src/utils.js',
+          '@styles': './src/styles.js',
         },
       },
     ],
