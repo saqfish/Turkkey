@@ -2,8 +2,8 @@ import 'react-native-console-time-polyfill';
 import BackgroundTimer from 'react-native-background-timer';
 import moment from 'moment';
 
-import {getHits} from '../../utils';
-import {scrapeErrors, filters} from '../../common';
+import {getHits} from '@utils';
+import {scrapeErrors, filters} from '@common';
 
 let interval = null;
 const runScrape = async values => {

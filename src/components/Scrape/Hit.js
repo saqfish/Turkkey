@@ -11,8 +11,8 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {HitStyles as styles} from '../../styles';
-import {getPayColor, getPayIcon} from '../../utils';
+import {HitStyles as styles} from '@styles';
+import {getPayColor, getPayIcon} from '@utils';
 
 const Hit = React.memo(props => {
   const {hit, navigation, theme} = props;

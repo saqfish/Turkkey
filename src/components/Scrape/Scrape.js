@@ -3,7 +3,7 @@ import {FlatList, SafeAreaView} from 'react-native';
 
 import AppBar from './ScrapeAppBar.js';
 import Button from './Button';
-import {ScrapeStyles as styles} from '../../styles';
+import {ScrapeStyles as styles} from '@styles';
 
 import {scrapeContext, snackBarContext} from '../Context';
 

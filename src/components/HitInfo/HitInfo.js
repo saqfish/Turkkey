@@ -12,7 +12,7 @@ import AppBar from './../AppBar/AppBar';
 import Button from './Button';
 import Progress from './Progress';
 
-import {HitInfoStyles as styles} from '../../styles';
+import {HitInfoStyles as styles} from '@styles';
 
 const HitInfo = props => {
   const {hit, hasRating} = props.route.params;

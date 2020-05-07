@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Subheading, ProgressBar} from 'react-native-paper';
-import {getRatingColor} from '../../utils';
+import {getRatingColor} from '@utils';
 
 const Progress = (name, value) => {
   return (

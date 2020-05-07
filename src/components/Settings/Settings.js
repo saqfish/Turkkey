@@ -6,7 +6,7 @@ import {Divider, List, Switch, Text, withTheme} from 'react-native-paper';
 
 import {scrapeContext} from '../Context';
 
-import {filterTypes} from '../../utils';
+import {filterTypes} from '@utils';
 
 import Button from './Button';
 
