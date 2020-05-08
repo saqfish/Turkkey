@@ -38,7 +38,7 @@ const DrawerContent = props => {
     <DrawerContentScrollView {...props}>
       <View>
         <View style={styles.headerContainer}>
-          <Text style={styles.headerLabel}>Scraper</Text>
+          <Text style={styles.headerLabel}>Turkkey</Text>
         </View>
         <Divider />
         <DrawerItemList {...filterdProps} />
