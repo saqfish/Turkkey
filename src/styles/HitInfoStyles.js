@@ -11,11 +11,17 @@ const styles = StyleSheet.create({
   rating: {
     margin: 0,
   },
-  actionButtons: {
-    margin: 0,
-    padding: 20,
+  actionButton: {
+    marginLeft: 4,
   },
-  bottomButtonsContainer: {
+  acceptButton: {
+    marginRight: 4,
+    marginLeft: 6,
+  },
+  previewButton: {
+    marginLeft: 4,
+  },
+  buttonsContainer: {
     flexDirection: 'row',
   },
 });

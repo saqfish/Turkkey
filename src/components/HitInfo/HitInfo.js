@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 import {
   Divider,
   Card,
@@ -7,6 +7,7 @@ import {
   withTheme,
   List,
   IconButton,
+  Button,
 } from 'react-native-paper';
 
 import AppBar from './HitInfoAppBar';
@@ -36,8 +37,12 @@ const HitInfo = props => {
           right={inProps => {
             return (
               <>
-                <List.Icon {...inProps} icon="heart" />
-                <List.Icon {...inProps} icon="block-helper" />
+                <IconButton {...inProps} icon="heart" onPress={() => {}} />
+                <IconButton
+                  {...inProps}
+                  icon="block-helper"
+                  onPress={() => {}}
+                />
               </>
             );
           }}
@@ -59,24 +64,37 @@ const HitInfo = props => {
           <List.Item
             right={inProps => {
               return (
-                <>
-                  <IconButton {...inProps} icon="heart" onPress={() => {}} />
-                  <IconButton
-                    {...inProps}
-                    icon="block-helper"
-                    onPress={() => {}}
-                  />
-                  <IconButton
-                    {...inProps}
-                    icon="open-in-app"
-                    onPress={() => {}}
-                  />
-                  <IconButton
-                    {...inProps}
-                    icon="open-in-app"
-                    onPress={() => {}}
-                  />
-                </>
+                <View style={styles.buttonsContainer}>
+                  <Button
+                    style={styles.acceptButton}
+                    mode="contained"
+                    compact={true}
+                    title="Accept"
+                    onPress={() => {
+                      const uri = `https://worker.mturk.com/${
+                        hit.accept_project_task_url
+                      }`;
+                      navigation.navigate('WebView', {
+                        uri,
+                      });
+                    }}>
+                    Accept
+                  </Button>
+                  <Button
+                    style={styles.previewButton}
+                    mode="contained"
+                    compact={true}
+                    onPress={() => {
+                      const uri = `https://worker.mturk.com/${
+                        hit.project_tasks_url
+                      }`;
+                      navigation.navigate('WebView', {
+                        uri,
+                      });
+                    }}>
+                    Preview
+                  </Button>
+                </View>
               );
             }}
           />
@@ -115,20 +133,3 @@ const HitInfo = props => {
 };
 
 export default withTheme(HitInfo);
-
-/*
-            onPress={() => {
-              const uri = `https://worker.mturk.com/${
-                hit.accept_project_task_url
-              }`;
-              navigation.navigate('WebView', {
-                uri,
-              });
-            }}
-            onPress={() => {
-              const uri = `https://worker.mturk.com/${hit.project_tasks_url}`;
-              navigation.navigate('WebView', {
-                uri,
-              });
-            }}
-	    */
