@@ -134,7 +134,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.hntmobile"
+        applicationId "com.turkkey"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

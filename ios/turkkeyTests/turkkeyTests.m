@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface hntMobileTests : XCTestCase
+@interface turkkeyTests : XCTestCase
 
 @end
 
-@implementation hntMobileTests
+@implementation turkkeyTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

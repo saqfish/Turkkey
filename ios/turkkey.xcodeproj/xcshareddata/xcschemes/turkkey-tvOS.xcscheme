@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "hntMobile-tvOS.app"
-               BlueprintName = "hntMobile-tvOS"
-               ReferencedContainer = "container:hntMobile.xcodeproj">
+               BuildableName = "turkkey-tvOS.app"
+               BlueprintName = "turkkey-tvOS"
+               ReferencedContainer = "container:turkkey.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "hntMobile-tvOSTests.xctest"
-               BlueprintName = "hntMobile-tvOSTests"
-               ReferencedContainer = "container:hntMobile.xcodeproj">
+               BuildableName = "turkkey-tvOSTests.xctest"
+               BlueprintName = "turkkey-tvOSTests"
+               ReferencedContainer = "container:turkkey.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "hntMobile-tvOS.app"
-            BlueprintName = "hntMobile-tvOS"
-            ReferencedContainer = "container:hntMobile.xcodeproj">
+            BuildableName = "turkkey-tvOS.app"
+            BlueprintName = "turkkey-tvOS"
+            ReferencedContainer = "container:turkkey.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "hntMobile-tvOS.app"
-            BlueprintName = "hntMobile-tvOS"
-            ReferencedContainer = "container:hntMobile.xcodeproj">
+            BuildableName = "turkkey-tvOS.app"
+            BlueprintName = "turkkey-tvOS"
+            ReferencedContainer = "container:turkkey.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
