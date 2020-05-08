@@ -43,16 +43,30 @@ const getTO = hits => {
 };
 
 const getPayColor = pay => {
-  return pay > 4 ? 'green' : pay > 3 ? 'yellow' : pay > 2 ? 'orange' : 'red';
+  return pay >= 5
+    ? 'green'
+    : pay >= 4
+    ? 'green'
+    : pay >= 3
+    ? 'yellow'
+    : pay >= 2
+    ? 'orange'
+    : pay >= 1
+    ? 'red'
+    : 'grey';
 };
 const getPayIcon = pay => {
-  return pay > 4
-    ? 'arrow-up'
-    : pay > 3
-    ? 'arrow-top-right'
-    : pay > 2
-    ? 'arrow-bottom-right'
-    : 'arrow-down';
+  return pay >= 5
+    ? 'circle-slice-8'
+    : pay >= 4
+    ? 'circle-slice-7'
+    : pay >= 3
+    ? 'circle-slice-5'
+    : pay >= 2
+    ? 'circle-slice-3'
+    : pay >= 1
+    ? 'circle-slice-1'
+    : 'circle-outline';
 };
 
 const getRatingColor = rating => {

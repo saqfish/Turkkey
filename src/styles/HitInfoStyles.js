@@ -7,12 +7,15 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  actionButtons: {
+  scrollView: {},
+  rating: {
     margin: 0,
   },
+  actionButtons: {
+    margin: 0,
+    padding: 20,
+  },
   bottomButtonsContainer: {
-    position: 'absolute',
-    bottom: 0,
     flexDirection: 'row',
   },
 });

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Button} from 'react-native';
 import AppBar from './SettingsAppBar.js';
 import Slider from '@react-native-community/slider';
 import {Divider, List, Switch, Text, withTheme} from 'react-native-paper';
@@ -7,8 +7,6 @@ import {Divider, List, Switch, Text, withTheme} from 'react-native-paper';
 import {scrapeContext} from '../Context';
 
 import {filterTypes} from '@utils';
-
-import Button from './Button';
 
 const Settings = props => {
   const {navigation} = props;
@@ -144,6 +142,7 @@ const Settings = props => {
           right={inProps => {
             return (
               <Button
+                color={theme.colors.primary}
                 title={filterTypes(filter).label}
                 onPress={() => setFilter(filterTypes(filter + 1).type)}
               />
@@ -155,7 +154,8 @@ const Settings = props => {
       <List.Section>
         <List.Subheader>Pre</List.Subheader>
         <List.Item
-          title={<Text>Continue PRE</Text>}
+          title={<Text>Continue on PRE</Text>}
+          description={'Continue scraping even on PRE error'}
           right={inProps => {
             return (
               <Switch

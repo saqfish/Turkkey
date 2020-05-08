@@ -12,17 +12,20 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   cardLeft: {
+    opacity: 0.87,
     justifyContent: 'flex-end',
-    height: 25,
-    width: 25,
+    marginRight: 10,
+    height: 35,
+    width: 35,
   },
   cardTitle: {
+    opacity: 0.87,
     marginVertical: 0,
     marginBottom: 2,
   },
   cardSubtitle: {
+    opacity: 0.6,
     justifyContent: 'flex-start',
-    marginBottom: 0,
   },
   cardContent: {
     flexDirection: 'row',
@@ -37,8 +40,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   timeLabel: {
-    fontSize: 16,
+    opacity: 0.6,
+    fontSize: 14,
     alignSelf: 'flex-end',
+    paddingLeft: 2,
   },
 });
 
