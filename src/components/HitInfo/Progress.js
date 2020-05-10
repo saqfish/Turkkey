@@ -11,7 +11,7 @@ const Progress = (name, value, max) => {
         <Text style={styles.label}>{`${name}`}</Text>
         <Text style={styles.rating}>{`${value} / ${max}`}</Text>
       </View>
-      <ProgressBar progress={value / max} color={getRatingColor(value)} />
+      <ProgressBar progress={value / max} color={getRatingColor(value, max)} />
     </View>
   );
 };

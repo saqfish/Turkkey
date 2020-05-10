@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, ScrollView, View} from 'react-native';
 import {
   Divider,
@@ -18,7 +18,6 @@ import {HitInfoStyles as styles} from '@styles';
 const HitInfo = props => {
   const {hit, hasRating} = props.route.params;
   const {navigation} = props;
-  console.log(hit.requesterInfo);
 
   const comm = hasRating ? hit.rating.attrs.comm : 0;
   const fair = hasRating ? hit.rating.attrs.fair : 0;
@@ -27,6 +26,12 @@ const HitInfo = props => {
 
   const regExApprovalString = hit.requesterInfo.taskApprovalRate.match(/\d+/g);
   const approvalRating = regExApprovalString ? regExApprovalString : 0;
+
+  const [requesterRatingExpanded, setRequesterRatingExpanded] = useState(false);
+
+  const requesterRatingExpandHandle = () => {
+    setRequesterRatingExpanded(!requesterRatingExpanded);
+  };
 
   return (
     <>
@@ -48,19 +53,23 @@ const HitInfo = props => {
           }}
         />
         <Card>
-          <>
+          <List.Accordion
+            title="Rating & Other info"
+            right={inProps => <List.Icon {...inProps} icon="check" />}
+            expanded={requesterRatingExpanded}
+            onPress={requesterRatingExpandHandle}>
             <Card.Content>
               {Progress('Approval', approvalRating, 100)}
             </Card.Content>
             <Card.Content>{Progress('Communcation', comm, 5)}</Card.Content>
             <Card.Content>{Progress('Fairness', fair, 5)}</Card.Content>
             <Card.Content>{Progress('Promptness', fast, 5)}</Card.Content>
-            <Card.Content>{Progress('Generocity', pay, 5)}</Card.Content>
-          </>
+            <Card.Content>{Progress('Generosity', pay, 5)}</Card.Content>
+            <List.Item title="Communication" right={inProps => {}} />
+          </List.Accordion>
           <Card.Content />
         </Card>
         <Card>
-          <List.Item title={hit.title} description={hit.description} />
           <List.Item
             right={inProps => {
               return (
@@ -98,6 +107,7 @@ const HitInfo = props => {
               );
             }}
           />
+          <List.Item title={hit.title} description={hit.description} />
         </Card>
 
         <Divider />

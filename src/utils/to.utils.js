@@ -42,42 +42,30 @@ const getTO = hits => {
   });
 };
 
-const getPayColor = pay => {
-  return pay >= 5
-    ? 'green'
-    : pay >= 4
-    ? 'green'
-    : pay >= 3
-    ? 'yellow'
-    : pay >= 2
-    ? 'orange'
-    : pay >= 1
-    ? 'red'
-    : 'grey';
-};
-const getPayIcon = pay => {
-  return pay >= 5
+const getRatingIcon = (rating, max) => {
+  let percent = Math.trunc((rating / max) * 100);
+  return percent >= 80
     ? 'circle-slice-8'
-    : pay >= 4
-    ? 'circle-slice-7'
-    : pay >= 3
-    ? 'circle-slice-5'
-    : pay >= 2
-    ? 'circle-slice-3'
-    : pay >= 1
+    : percent >= 60
+    ? 'circle-slice-6'
+    : percent >= 40
+    ? 'circle-slice-4'
+    : percent >= 20
+    ? 'circle-slice-2'
+    : percent >= 10
     ? 'circle-slice-1'
     : 'circle-outline';
 };
-
-const getRatingColor = rating => {
-  return rating >= 4
+const getRatingColor = (rating, max) => {
+  let percent = Math.trunc((rating / max) * 100);
+  return percent >= 80
     ? 'green'
-    : rating >= 3
+    : percent >= 60
     ? 'yellow'
-    : rating >= 2
+    : percent >= 40
     ? 'orange'
-    : rating >= 1
+    : percent >= 20
     ? 'red'
     : 'grey';
 };
-export {getTO, getPayIcon, getPayColor, getRatingColor};
+export {getTO, getRatingColor, getRatingIcon};

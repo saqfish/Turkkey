@@ -5,7 +5,7 @@ import {Card, Text, Subheading, Divider, withTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {HitStyles as styles} from '@styles';
-import {getPayColor, getPayIcon} from '@utils';
+import {getRatingColor} from '@utils';
 
 const Hit = React.memo(props => {
   const {hit, navigation} = props;
@@ -14,10 +14,12 @@ const Hit = React.memo(props => {
     typeof hit.rating !== 'undefined' &&
     typeof hit.rating.attrs !== 'undefined' &&
     typeof hit.rating.attrs.pay !== 'undefined';
-  const ratingProp = {
-    name: hasRating ? getPayIcon(hit.rating.attrs.pay) : 'circle-outline',
-    color: hasRating ? getPayColor(hit.rating.attrs.pay) : 'grey',
-    size: 35,
+
+  const requesterStyle = {
+    style: {
+      ...styles.requesterStyle,
+      borderColor: hasRating ? getRatingColor(hit.rating.attrs.pay, 5) : 'grey',
+    },
   };
 
   return (
@@ -40,9 +42,7 @@ const Hit = React.memo(props => {
               </Subheading>
             </View>
           )}
-          left={() => (
-            <Icon style={styles.requesterIconStyle} {...ratingProp} />
-          )}
+          left={() => <Text {...requesterStyle} />}
           style={styles.cardStyle}
           subtitleStyle={styles.cardSubtitle}
           rightStyle={styles.cardRight}

@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   cardStyle: {
     paddingRight: 10,
-    paddingLeft: 10,
+    paddingLeft: 2,
     paddingBottom: 5,
     paddingTop: 5,
     justifyContent: 'flex-start',
@@ -12,11 +12,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   cardLeft: {
-    opacity: 0.87,
-    justifyContent: 'flex-end',
-    marginRight: 10,
-    height: 35,
-    width: 35,
+    alignSelf: 'center',
+    marginRight: 8,
+    width: 6,
   },
   cardTitle: {
     opacity: 0.87,
@@ -44,6 +42,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     alignSelf: 'flex-end',
     paddingLeft: 2,
+  },
+  requesterStyle: {
+    borderLeftWidth: 3,
+    height: 35,
   },
 });
 
