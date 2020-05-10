@@ -3,7 +3,8 @@ import {View, Text} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {useTheme} from 'react-native-paper';
 
-import {StyleSheet} from 'react-native';
+import {version} from '@package';
+import {AppStyles} from '@styles';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -15,6 +16,7 @@ import {
 
 const DrawerContent = props => {
   const theme = useTheme();
+  const {drawerStyles: styles} = AppStyles;
   const filterdProps = {
     ...props,
     state: {
@@ -23,32 +25,27 @@ const DrawerContent = props => {
     },
   };
 
-  const styles = StyleSheet.create({
-    headerContainer: {
-      height: 80,
-      padding: 12,
-      justifyContent: 'center',
-    },
-    headerLabel: {
-      color: theme.colors.text,
-      fontSize: 20,
-    },
-  });
+  const color = {
+    color: theme.colors.text,
+  };
+
+  console.log(styles.drawerContainer);
+  console.log(styles.appName);
+
   return (
     <DrawerContentScrollView {...props}>
       <View>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerLabel}>Turkkey</Text>
+        <View style={styles.drawerContainer}>
+          <Text style={{...styles.appName, ...color}}>Turrkey</Text>
+          <Text style={{...styles.appVersion, ...color}}>{version}</Text>
         </View>
         <Divider />
         <DrawerItemList {...filterdProps} />
         <Divider />
         <View style={{}}>
           <DrawerItem
-            icon={() => (
-              <Icon name="help" color={theme.colors.text} size={24} />
-            )}
-            labelStyle={{color: theme.colors.text}}
+            icon={() => <Icon name="help" color={color.color} size={24} />}
+            labelStyle={color.color}
             label="Help"
             onPress={() => {}}
           />

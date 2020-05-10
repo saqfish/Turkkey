@@ -1,3 +1,4 @@
+import {StyleSheet} from 'react-native';
 import {DefaultTheme, DarkTheme} from '@react-navigation/native';
 
 const fonts = {
@@ -56,5 +57,21 @@ const lightTheme = {
   },
 };
 
-const styles = {darkTheme, lightTheme};
+const drawerStyles = StyleSheet.create({
+  drawerContainer: {
+    height: 80,
+    padding: 12,
+    justifyContent: 'center',
+  },
+  appName: {
+    fontSize: 20,
+  },
+  appVersion: {
+    opacity: 0.87,
+    fontSize: 14,
+  },
+});
+
+const styles = {darkTheme, lightTheme, drawerStyles};
+
 export default styles;
