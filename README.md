@@ -1,5 +1,3 @@
-Turkkey
-================================================
 ![Logo](https://github.com/saqfish/turkkey/blob/master/misc/logo.png)
 
 Open source Amazon Mechanical Turk scraper for mobile.
@@ -15,6 +13,9 @@ Open source Amazon Mechanical Turk scraper for mobile.
   - [React-Navigation](https://reactnavigation.org/) 
   - [React-Paper](https://github.com/callstack/react-native-paper) 
 
+
+## Screenshots
+You can view screenshots [here](https://github.com/saqfish/turkkey/tree/master/screenshots) 
 
 ## Project structure
 This template follows a very simple project structure:
