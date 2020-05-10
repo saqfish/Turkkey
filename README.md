@@ -1,5 +1,6 @@
 Turkkey
 ================================================
+![Logo](https://github.com/saqfish/turkkey/blob/master/misc/logo.png)
 
 Open source Amazon Mechanical Turk scraper for mobile.
 
