@@ -2,6 +2,11 @@
 
 Open-source Amazon Mechanical Turk scraper for mobile.
 
+<a href="https://play.google.com/store/apps/details?id=com.turkkey">
+  <img alt="Get it on Google Play"
+       src="../../../images/brand/en_generic_rgb_wo_45.png" />
+</a>
+
 <div style="display: grid; width: 100%; grid-gap: 50px; justify-content: space-evenly;grid-template-columns: auto auto auto auto;">
   
 <img style="display: block;" src="https://github.com/saqfish/turkkey/blob/master/screenshots/screen.png?raw=true" width="200px">
