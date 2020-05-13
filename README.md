@@ -10,9 +10,8 @@ Open-source Amazon Mechanical Turk scraper for mobile.
 <div style="display: grid; width: 100%; grid-gap: 50px; justify-content: space-evenly;grid-template-columns: auto auto auto auto;">
   
 <img style="display: block;" src="https://github.com/saqfish/turkkey/blob/master/screenshots/screen.png?raw=true" width="200px">
+<img style="display: block;" src="https://github.com/saqfish/turkkey/blob/master/screenshots/screen1.png?raw=true" width="200px">
 <img style="display: block;" src="https://github.com/saqfish/turkkey/blob/master/screenshots/screen2.png?raw=true" width="200px">
-<img style="display: block;" src="https://github.com/saqfish/turkkey/blob/master/screenshots/screen3.png?raw=true" width="200px">
-<img style="display: block;" src="https://github.com/saqfish/turkkey/blob/master/screenshots/screen4.png?raw=true" width="200px">
 
 </div>
 
