@@ -15,7 +15,7 @@
     "@react-native-community/slider": "^2.0.9",
     "@react-navigation/drawer": "^5.4.1",
     "@react-navigation/native": "^5.1.5",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "moment": "^2.25.1",
     "react": "16.11.0",
     "react-native": "0.62.2",
